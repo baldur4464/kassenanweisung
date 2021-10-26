@@ -1,5 +1,89 @@
-<div class="container">
-    <form action="#">
-        <label for=""></label>
+
+<!--
+Form für für Kassenanweisung
+Haushaltsjahr: Textfeld
+Titelnr: Textfeld
+Geldgeber: Textfeld
+Begründung: Textarea
+Betrag: Textfeld
+Geldempfänger: Textfeld
+Zahlungsart: Auswahl
+Beleg: Textfeld
+Ausstellungsdatum: Textfeld
+Zahlungsdatum: Textfeld
+-->
+
+<div class="container abstand">
+    <h1 class="ueberschrift">Neue Kassenanweisung erstellen</h1>
+    <form action="/" method="post" role="form" enctype="application/x-www-form-urlencoded">
+        <div class="row abstand">
+            <div class="col">
+                <label for="haushaltsjahr">Haushaltsjahr(YY/YY): </label>
+                <input type="text" class="form-control " name="haushaltsjahr" id="haushaltsjahr">
+            </div>
+            <div class="col">
+                <label for="titelnr">Titelnr: </label>
+                <input type="text" class="form-control" name="titelnr" id="titelnr">
+            </div>
+        </div>
+        <div class="row abstand">
+            <div class="col">
+                <label for="geldgeber">Geldgeber: </label>
+                <input type="text" class="form-control " name="geldgeber" id="geldgeber">
+            </div>
+            <div class="col">
+                <label for="geldempfaenger">Geldempfänger: </label>
+                <input type="text" class="form-control" name="geldempfaenger" id="geldempfaenger">
+            </div>
+        </div>
+        <div class="row abstand">
+            <div class="col">
+                <label for="betrag">Betrag(Euro,Cent): </label>
+                <input type="text" class="form-control" name="betrag" id="betrag">
+            </div>
+            <div class="col">
+                <label for="zahlungsart">Zahlungsart: </label>
+                <select name="zahlungsart" class="custom-select" id="zahlungsart">
+                    <option selected>Bitte wählen Sie...</option>
+                    <option value="ueberweisung">Überweisung</option>
+                    <option value="bargeldeinzahlung">Bargeldeinzahlung</option>
+                    <option value="bargeldauszahlung">Bargeldauszahlung</option>
+                    <option value="muenzgeldeinzahlung">Münzgeldeinzahlung</option>
+                    <option value="scheckeinzahlung">Scheckeinzahlung</option>
+                    <option value="tresoreinzahlung">Tresoreinzahlung</option>
+                </select>
+            </div>
+        </div>
+        <div class="row abstand">
+            <div class="col">
+                <div class="form-group">
+                    <label for="begruendung">Begründung: </label>
+                    <textarea class="form-control" rows="3" name="begruendung" id="begruendung"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row abstand">
+            <div class="col">
+                <label for="beleg">Beleg: </label>
+                <input type="text" class="form-control" name="beleg" id="beleg">
+            </div>
+        </div>
+        <div class="row abstand">
+            <div class="col">
+                <label for="austellungsdatum">Ausstellungsdatum</label>
+                <input type="date" class="form-control" name="austellungsdatum" id="austellungsdatum">
+            </div>
+            <div class="col">
+                <label for="zahlungsdatum">Zahlungsdatum</label>
+                <input type="date" class="form-control" name="zahlungsdatum" id="zahlungsdatum">
+            </div>
+        </div>
+        <div class="row abstand">
+            <div class="col">
+                <input type="submit" class="btn btn-success" value="Absenden">
+                <input type="reset" class="btn btn-danger" value="Verwerfen">
+            </div>
+        </div>
+
     </form>
 </div>
