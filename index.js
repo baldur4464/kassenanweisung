@@ -3,7 +3,7 @@ import exphbs from "express-handlebars";
 import dotenv from "dotenv";
 import path from "path";
 import url from "url";
-import db from "./models/db.js";
+import * as KaWeModel from "./models/kassenanweisung.model.js"
 
 dotenv.config();
 
@@ -35,8 +35,8 @@ app.get('/kawedownload', (req, res) => {
     res.render('kawedownload');
 })
 
-app.post('/', async (req, res) => {
-    await db.addKassenanweisung(req.body);
+app.post('/',(req, res) => {
+    KaWeModel.insertKassenanweisung(req.body);
 });
 
 app.listen(port, () => {
