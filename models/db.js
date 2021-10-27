@@ -9,4 +9,6 @@ const connection = mysql.createConnection({
     password: process.env.DB_PASS,
 });
 
+connection.connect();
+
 export default connection;

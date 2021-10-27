@@ -1,7 +1,26 @@
 <div class="container-fluid">
     <table class="table">
+        <thead>
+            <tr>
+                <th>Haushaltsjahr</th>
+                <th>Titelnummer</th>
+                <th>Begründung</th>
+                <th class="text-end">Aktionen</th>
+            </tr>
+        </thead>
         <tbody>
-
+        {{#each rows}}
+            <tr>
+                <td>{{Haushaltsjahr}}</td>
+                <td>{{Titelnr}}</td>
+                <td>{{Begründung}}</td>
+                <td>
+                    <a href="#" type="button" class="btn btn-small btn-success">Betrachten</a>
+                    <a href="#" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
+                    <a href="#" type="button" class="btn btn-small btn-danger">Löschen</a>
+                </td>
+            </tr>
+        {{/each}}
         </tbody>
     </table>
 </div>

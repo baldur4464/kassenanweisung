@@ -1,18 +1,21 @@
 import connection from "./db.js"
 
+function getAllKassenanweisung (res) {
+
+    connection.query(("SELECT * FROM mysql.Kassenanweisungen"), (err, rows) => {
+        res.render('kaweanzeigen', {rows});
+    });
+}
+
 function insertKassenanweisung (body) {
 
     console.log(body);
-
-    connection.connect();
-
     connection.query(("INSERT INTO mysql.Kassenanweisungen SET ?"),body, (err, res) => {
-        if (err) throw err;
+        if (err) console.log("Fehler beim Einlesen");
         console.log(res);
     })
-    connection.end();
-
-
 }
 
-export {insertKassenanweisung};
+export {getAllKassenanweisung, insertKassenanweisung}
+
+
