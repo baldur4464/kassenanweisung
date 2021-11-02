@@ -3,7 +3,7 @@ import exphbs from "express-handlebars";
 import dotenv from "dotenv";
 import path from "path";
 import url from "url";
-import * as Kassenanweisung from "./models/kassenanweisung.model.js"
+import {router} from "./routes/kassenanweisungen.js"
 
 dotenv.config();
 
@@ -23,22 +23,9 @@ app.engine('hbs', exphbs({
 app.use(express.static(path.join(__dirname,'public')));
 app.set('view engine', 'hbs');
 
-app.get('/', (req, res) => {
-    res.render('kassenanweisung');
-})
 
-app.get('/kaweanzeigen',(req, res) => {
-    Kassenanweisung.getAllKassenanweisung(res);
-    //res.render('kaweanzeigen', {title: "Hallo"});
-})
 
-app.get('/kawedownload', (req, res) => {
-    res.render('kawedownload');
-})
-
-app.post('/',(req, res) => {
-    Kassenanweisung.insertKassenanweisung(req.body);
-});
+app.use('/', router);
 
 app.listen(port, () => {
     console.log(`The web server has started on port ${port}`);
