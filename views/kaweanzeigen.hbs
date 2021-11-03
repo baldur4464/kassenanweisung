@@ -1,8 +1,8 @@
 {{#if removed}}
-<div class="allert alert-success alert-dismissible fade show" role="alert">
-    <p>Kassenanweisung wurde erfolgreich entfernt</p>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
-</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <p>Kassenanweisung wurde erfolgreich gelöscht</p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen">Schließen</button>
+    </div>
 {{/if}}
 <div class="container-fluid">
     <table class="table">
@@ -23,8 +23,8 @@
                 <td>{{Titelnr}}</td>
                 <td>{{Begründung}}</td>
                 <td>
-                    <a href="" type="button" class="btn btn-small btn-success">Betrachten</a>
-                    <a href="#" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
+                    <a h="" type="button" class="btn btn-small btn-success">Betrachten</a>
+                    <a href="/edit/{{Kassenanweisung_ID}}ref" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
                     <a href="/{{Kassenanweisung_ID}}#" type="button" class="btn btn-small btn-danger">Löschen</a>
                 </td>
             </tr>

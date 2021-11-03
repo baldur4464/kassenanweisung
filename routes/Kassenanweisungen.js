@@ -19,6 +19,9 @@ router.get('/:id', (req, res) => {
     model.deleteKaWe(req, res);
 })
 
+router.get('/edit/:id', (req,res) => {
+    model.viewKaWe(req,res);
+})
 
 
 

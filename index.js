@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 import url from "url";
 import {router} from "./routes/kassenanweisungen.js"
+import helpers from "handlebars-helpers";
 
 dotenv.config();
 
@@ -26,6 +27,8 @@ app.set('view engine', 'hbs');
 
 
 app.use('/', router);
+
+
 
 app.listen(port, () => {
     console.log(`The web server has started on port ${port}`);
