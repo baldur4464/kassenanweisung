@@ -1,6 +1,6 @@
 # kassenanweisung
 
-##Aktuell Implementiert
+## Aktuell Implementiert
 + Kassenanweisung kann erstellt werden
 + Kassenanweisung können betrachtet werden
 + Kassenanweisung können bearbeitet werden
