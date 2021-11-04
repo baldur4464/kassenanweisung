@@ -44,7 +44,7 @@ Zahlungsdatum: Textfeld
                 </div>
                 <div class="col">
                     <label for="zahlungsart">Zahlungsart: </label>
-                    <select name="zahlungsart" class="custom-select" id="Zahlungsart" value="{{Zahlungsart}}" disabled>
+                    <select name="Zahlungsart" class="custom-select" id="Zahlungsart" value="{{Zahlungsart}}" disabled>
                         <option>Bitte wählen Sie...</option>
                         <option value="Überweisung" {{#if (selected Zahlungsart "Überweisung")}} selected{{/if}}>Überweisung</option>
                         <option value="Bargeldeinzahlung" {{#if (selected Zahlungsart "Bargeldeinzahlung")}} selected{{/if}}>Bargeldeinzahlung</option>

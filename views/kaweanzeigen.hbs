@@ -1,7 +1,12 @@
 {{#if removed}}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show">
         <p>Kassenanweisung wurde erfolgreich gelöscht</p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen">Schließen</button>
+    </div>
+{{/if}}
+
+{{#if updated}}
+    <div class="alert alert-success alert-dismissible fade show">
+        <p>Kassenanweisung wurde erfolgreich aktualisiert</p>
     </div>
 {{/if}}
 <div class="container-fluid">

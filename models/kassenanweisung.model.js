@@ -37,8 +37,22 @@ function deleteKaWe (req, res) {
 
 function updateKaWe (req, res) {
     let body = req.body;
+    console.log(body)
+    const {Haushaltsjahr, Titelnr, Geldgeber, Begründung, Betrag, Geldempfänger, Zahlungsart, Beleg, Ausstellungsdatum, Zahlungsdatum} = req.body;
+    connection.query(("UPDATE mysql.Kassenanweisungen SET Haushaltsjahr = ?, Titelnr = ?, Geldgeber = ?, Begründung = ?, Betrag = ?, Geldempfänger = ?, Zahlungsart = ?, Beleg = ?, Ausstellungsdatum = ?, Zahlungsdatum = ? WHERE Kassenanweisung_ID = ?")
+    , [Haushaltsjahr, Titelnr, Geldgeber, Begründung, Betrag, Geldempfänger, Zahlungsart, Beleg, Ausstellungsdatum, Zahlungsdatum, req.params.id], (err, rows) => {
+        console.log(Zahlungsart)
+        if(err) {
+            console.log(err);
+            return;
+        }
 
-    connectionquery((""))
+
+        connection.query(("SELECT * FROM mysql.Kassenanweisungen"), (err, rows) => {
+            var updated = true
+            res.render('kaweanzeigen', {updated, rows});
+        });
+        })
 }
 
 function viewKaWe (req, res) {

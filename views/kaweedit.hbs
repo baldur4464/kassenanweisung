@@ -16,7 +16,7 @@ Zahlungsdatum: Textfeld
 {{#each rows}}
 <div class="container abstand">
     <h1 class="ueberschrift">Kassenanweisung bearbeiten</h1>
-    <form action="/" method="post" role="form" enctype="application/x-www-form-urlencoded">
+    <form action="/edit/{{Kassenanweisung_ID}}" method="post" role="form" enctype="application/x-www-form-urlencoded">
         <div class="row abstand">
             <div class="col">
                 <label for="haushaltsjahr">Haushaltsjahr(YY/YY): </label>
@@ -44,7 +44,7 @@ Zahlungsdatum: Textfeld
             </div>
             <div class="col">
                 <label for="zahlungsart">Zahlungsart: </label>
-                <select name="zahlungsart" class="custom-select" id="Zahlungsart" value="{{Zahlungsart}}">
+                <select name="Zahlungsart" class="custom-select" id="Zahlungsart" value="{{Zahlungsart}}">
                     <option>Bitte wählen Sie...</option>
                     <option value="Überweisung" {{#if (selected Zahlungsart "Überweisung")}} selected{{/if}}>Überweisung</option>
                     <option value="Bargeldeinzahlung" {{#if (selected Zahlungsart "Bargeldeinzahlung")}} selected{{/if}}>Bargeldeinzahlung</option>
