@@ -20,9 +20,16 @@ router.get('/:id', (req, res) => {
 })
 
 router.get('/edit/:id', (req,res) => {
-    model.viewKaWe(req,res);
+    model.viewEditKaWe(req,res);
 })
 
+router.post('/edit/:id', (req,res) => {
+    model.updateKaWe(req, res);
+})
+
+router.get('/view/:id', (req, res) => {
+    model.viewKaWe(req, res);
+})
 
 
 export {router};

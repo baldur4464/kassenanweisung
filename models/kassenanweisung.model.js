@@ -7,12 +7,9 @@ function viewAllKaWe (req, res) {
     });
 }
 
-function viewKaWe (req, res) {
-
-    console.log(req.params.id);
+function viewEditKaWe (req, res) {
 
     connection.query('SELECT * FROM mysql.Kassenanweisungen WHERE Kassenanweisung_ID = ?',[req.params.id], (err, rows) => {
-        console.log(rows);
         res.render('kaweedit', {rows});
     })
 }
@@ -28,8 +25,6 @@ function insertKaWe (req, res) {
 }
 
 function deleteKaWe (req, res) {
-    console.log(req.body)
-
     connection.query(('DELETE FROM mysql.Kassenanweisungen WHERE Kassenanweisung_ID = ?'),[req.params.id], (err) => {
         if (err) console.log(err);
     } )
@@ -40,7 +35,19 @@ function deleteKaWe (req, res) {
     });
 }
 
-export {viewAllKaWe, viewKaWe, insertKaWe, deleteKaWe};
+function updateKaWe (req, res) {
+    let body = req.body;
+
+    connectionquery((""))
+}
+
+function viewKaWe (req, res) {
+    connection.query('SELECT * FROM mysql.Kassenanweisungen WHERE Kassenanweisung_ID = ?',[req.params.id], (err, rows) => {
+        res.render('kaweview', {rows});
+    })
+}
+
+export {viewAllKaWe, viewEditKaWe, insertKaWe, deleteKaWe, updateKaWe, viewKaWe};
 
 
 

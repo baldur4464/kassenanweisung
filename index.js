@@ -3,8 +3,9 @@ import exphbs from "express-handlebars";
 import dotenv from "dotenv";
 import path from "path";
 import url from "url";
-import {router} from "./routes/kassenanweisungen.js"
-import helpers from "handlebars-helpers";
+import {router} from "./routes/kassenanweisungen.js";
+import helpers from './public/js/helpers.js';
+
 
 dotenv.config();
 
@@ -17,13 +18,15 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
+
+
 app.engine('hbs', exphbs({
     defaultLayout: 'main',
-    extname: '.hbs'
+    extname: '.hbs',
+    helpers: helpers
 }));
 app.use(express.static(path.join(__dirname,'public')));
 app.set('view engine', 'hbs');
-
 
 
 app.use('/', router);

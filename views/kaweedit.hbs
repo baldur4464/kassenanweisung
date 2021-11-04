@@ -46,12 +46,12 @@ Zahlungsdatum: Textfeld
                 <label for="zahlungsart">Zahlungsart: </label>
                 <select name="zahlungsart" class="custom-select" id="Zahlungsart" value="{{Zahlungsart}}">
                     <option>Bitte wählen Sie...</option>
-                    <option value="Überweisung">Überweisung</option>
-                    <option value="Bargeldeinzahlung">Bargeldeinzahlung</option>
-                    <option value="Bargeldauszahlung">Bargeldauszahlung</option>
-                    <option value="Münzgeldeinzahlung">Münzgeldeinzahlung</option>
-                    <option value="Scheckeinzahlung">Scheckeinzahlung</option>
-                    <option value="Tresoreinzahlung">Tresoreinzahlung</option>
+                    <option value="Überweisung" {{#if (selected Zahlungsart "Überweisung")}} selected{{/if}}>Überweisung</option>
+                    <option value="Bargeldeinzahlung" {{#if (selected Zahlungsart "Bargeldeinzahlung")}} selected{{/if}}>Bargeldeinzahlung</option>
+                    <option value="Bargeldauszahlung" {{#if (selected Zahlungsart "Bargeldauszahlung")}} selected{{/if}}>Bargeldauszahlung</option>
+                    <option value="Münzgeldeinzahlung" {{#if (selected Zahlungsart "Münzgeldeinzahlung")}} selected{{/if}}>Münzgeldeinzahlung</option>
+                    <option value="Scheckeinreichung" {{#if (selected Zahlungsart "Scheckeinreichung")}} selected{{/if}}>Scheckeinreichung</option>
+                    <option value="Tresoreinzahlung" {{#if (selected Zahlungsart "Tresoreinzahlung")}} selected{{/if}}>Tresoreinzahlung</option>
                 </select>
             </div>
         </div>
@@ -72,11 +72,11 @@ Zahlungsdatum: Textfeld
         <div class="row abstand">
             <div class="col">
                 <label for="ausstellungsdatum">Ausstellungsdatum</label>
-                <input type="date" class="form-control" name="Ausstellungsdatum" id="ausstellungsdatum" value="2021-10-10">
+                <input type="date" class="form-control" name="Ausstellungsdatum" id="ausstellungsdatum" value="{{formatdate Ausstellungsdatum}}">
             </div>
             <div class="col">
                 <label for="zahlungsdatum">Zahlungsdatum</label>
-                <input type="date" class="form-control" name="Zahlungsdatum" id="zahlungsdatum" value="{{Zahlungsdatum}}">
+                <input type="date" class="form-control" name="Zahlungsdatum" id="zahlungsdatum" value="{{formatdate Zahlungsdatum}}">
             </div>
         </div>
         <div class="row abstand">
