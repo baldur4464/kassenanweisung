@@ -1,11 +1,13 @@
 # kassenanweisung
 
-## Aktuell Implementiert
+## Aktuell implementiert
 + Kassenanweisung kann erstellt werden
 + Kassenanweisung können betrachtet werden
 + Kassenanweisung können bearbeitet werden
 + Kassenanweisung können gelöscht werden
 
-## Kommende Features
+## Noch nicht implementiert
 + Paging der Kassenanweisungen
 + Kassenanweisung als PDF erstellen und runterladen
++ Vorlage für Kassenanweisung erstellen
++ Feedback für erfolgreiches erstellen von Kassenanweisung

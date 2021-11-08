@@ -16,10 +16,11 @@ function viewEditKaWe (req, res) {
 
 function insertKaWe (req, res) {
 
-    let body = req.body;
+    const {Haushaltsjahr, Titelnr, Geldgeber, Begründung, Betrag, Geldempfänger, Zahlungsart, Beleg, Ausstellungsdatum, Zahlungsdatum} = req.body;
+    connection.query(("INSERT INTO mysql.Kassenanweisungen SET Haushaltsjahr = ?, Titelnr = ?, Geldgeber = ?, Begründung = ?, Betrag = ?, Geldempfänger = ?, Zahlungsart = ?, Beleg = ?, Ausstellungsdatum = ?, Zahlungsdatum = ?"),
+        [Haushaltsjahr, Titelnr, Geldgeber, Begründung, Betrag, Geldempfänger, Zahlungsart, Beleg, Ausstellungsdatum, Zahlungsdatum], (err, res) => {
+        if (err) console.log(err);
 
-    connection.query(("INSERT INTO mysql.Kassenanweisungen SET ?"),body, (err, res) => {
-        if (err) console.log("Fehler beim Einlesen");
 
     })
 }
