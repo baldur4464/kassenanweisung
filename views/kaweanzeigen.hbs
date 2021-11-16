@@ -36,4 +36,14 @@
         {{/each}}
         </tbody>
     </table>
+    <div class="d-flex abstand paging">
+        <ul class="pagination">
+            <li class="page-item {{#if firstpage}}disabled{{/if}}">
+                <a class="page-link" href="?page={{prevpage page}}">Vorherige Seite</a>
+            </li>
+            <li class="page-item {{#if lastpage}}disabled{{/if}}">
+                <a class="page-link" href="?page={{nextpage page}}">Nächste Seite</a>
+            </li>
+        </ul>
+    </div>
 </div>

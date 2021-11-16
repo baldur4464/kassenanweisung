@@ -1,9 +1,37 @@
 import connection from "./db.js"
 
 function viewAllKaWe (req, res) {
+    const page = req.query.page;
+    const limit = 10;
 
-    connection.query(("SELECT * FROM mysql.Kassenanweisungen"), (err, rows) => {
-        res.render('kaweanzeigen', {rows});
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+
+    connection.query(("SELECT * FROM mysql.Kassenanweisungen ORDER BY Kassenanweisung_ID DESC"), (err, rows) => {
+        var firstpage;
+        var lastpage;
+        var entries;
+
+        entries = rows.length;
+        var maxpage = Math.ceil(entries / limit);
+
+        rows = rows.slice(startIndex, endIndex);
+
+
+        if(page == 1) {
+            firstpage = true;
+        } else {
+            firstpage = false;
+        }
+
+        if(page == maxpage) {
+            lastpage = true;
+        } else {
+            lastpage = false;
+        }
+
+        res.render('kaweanzeigen', {rows, page, firstpage, lastpage});
     });
 }
 
@@ -38,6 +66,7 @@ function deleteKaWe (req, res) {
 
 function updateKaWe (req, res) {
     let body = req.body;
+
     console.log(body)
     const {Haushaltsjahr, Titelnr, Geldgeber, Begründung, Betrag, Geldempfänger, Zahlungsart, Beleg, Ausstellungsdatum, Zahlungsdatum} = req.body;
     connection.query(("UPDATE mysql.Kassenanweisungen SET Haushaltsjahr = ?, Titelnr = ?, Geldgeber = ?, Begründung = ?, Betrag = ?, Geldempfänger = ?, Zahlungsart = ?, Beleg = ?, Ausstellungsdatum = ?, Zahlungsdatum = ? WHERE Kassenanweisung_ID = ?")
