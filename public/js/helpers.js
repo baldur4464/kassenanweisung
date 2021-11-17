@@ -6,5 +6,11 @@ export default {
     },
     selected: function (Zahlungsart, option) {
         return Zahlungsart == option;
+    },
+    nextpage: function (page) {
+        return parseInt(page) + 1;
+    },
+    prevpage: function (page) {
+        return parseInt(page) - 1;
     }
 }

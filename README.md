@@ -5,9 +5,10 @@
 + Kassenanweisung können betrachtet werden
 + Kassenanweisung können bearbeitet werden
 + Kassenanweisung können gelöscht werden
++ Pagination wurde hinzugefügt
 
 ## Noch nicht implementiert
-+ Paging der Kassenanweisungen
++ Paging der Kassenanweisungen (done)
 + Kassenanweisung als PDF erstellen und runterladen
 + Vorlage für Kassenanweisung erstellen
 + Feedback für erfolgreiches erstellen von Kassenanweisung

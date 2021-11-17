@@ -1,5 +1,5 @@
 {{#if removed}}
-    <div class="alert alert-success alert-dismissible fade show">
+    <div class="alert alert-danger alert-dismissible fade show">
         <p>Kassenanweisung wurde erfolgreich gelöscht</p>
     </div>
 {{/if}}
@@ -30,10 +30,20 @@
                 <td>
                     <a href="/view/{{Kassenanweisung_ID}}" type="button" class="btn btn-small btn-success">Betrachten</a>
                     <a href="/edit/{{Kassenanweisung_ID}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
-                    <a href="/{{Kassenanweisung_ID}}" type="button" class="btn btn-small btn-danger">Löschen</a>
+                    <a href="/delete/{{Kassenanweisung_ID}}" type="button" class="btn btn-small btn-danger">Löschen</a>
                 </td>
             </tr>
         {{/each}}
         </tbody>
     </table>
+    <div class="d-flex abstand paging">
+        <ul class="pagination">
+            <li class="page-item {{#if firstpage}}disabled{{/if}}">
+                <a class="page-link" href="?page={{prevpage page}}">Vorherige Seite</a>
+            </li>
+            <li class="page-item {{#if lastpage}}disabled{{/if}}">
+                <a class="page-link" href="?page={{nextpage page}}">Nächste Seite</a>
+            </li>
+        </ul>
+    </div>
 </div>
