@@ -5,21 +5,22 @@ function viewAllKaWe (req, res) {
     const updated = req.query.edit;
     const removed = req.query.removed;
     const limit = 10;
+    let maxEntries;
 
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
+    const startIndex = ((page - 1) * limit);
+
+    connection.query(("SELECT COUNT(*) AS count FROM mysql.Kassenanweisungen"), (err, rows) => {
+       maxEntries = rows[0].count
+    });
+
+    var sql = "SELECT * FROM mysql.Kassenanweisungen ORDER BY Kassenanweisung_ID DESC LIMIT " + startIndex + "," + limit;
 
 
-    connection.query(("SELECT * FROM mysql.Kassenanweisungen  ORDER BY Kassenanweisung_ID DESC"), (err, rows) => {
+    connection.query((sql), (err, rows) => {
         let firstpage;
         let lastpage;
-        let entries;
 
-        entries = rows.length;
-        let maxpage = Math.ceil(entries / limit);
-
-        rows = rows.slice(startIndex, endIndex);
-
+        let maxpage = Math.ceil(maxEntries / limit);
 
         firstpage = page == 1;
 
