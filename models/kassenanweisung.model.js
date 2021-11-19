@@ -1,5 +1,6 @@
 import connection from "./db.js"
 
+//Modelle für Views
 function viewAllKaWe (req, res) {
     const page = req.query.page;
     const updated = req.query.edit;
@@ -74,6 +75,11 @@ function viewKaWe (req, res) {
         res.render('kaweview', {rows});
     })
 }
+
+
+//Modelle für interne Datenbankabfragen
+
+
 
 export {viewAllKaWe, viewEditKaWe, insertKaWe, deleteKaWe, updateKaWe, viewKaWe};
 

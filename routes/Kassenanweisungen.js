@@ -33,7 +33,7 @@ router.get('/view/:id', (req, res) => {
 })
 
 router.get('/kawedownload', (req, res) => {
-    pdfservice.kassenanweisungToPDF(req, res);
+    pdfservice.kassenanweisungdownload(req, res);
 })
 
 router.get('*', (req, res) => {
