@@ -1,87 +1,259 @@
-import connection from "./db.js"
+import connection, { asyncQuery } from './db.js'
 
 //Modelle für Views
-function viewAllKaWe (req, res) {
-    const page = req.query.page;
-    const updated = req.query.edit;
-    const removed = req.query.removed;
-    const limit = 10;
-    let maxEntries;
+function viewAllKaWe(req, res) {
+  const page = req.query.page ? req.query.page : 1
+  const updated = req.query.edit ? req.query.edit : false
+  const removed = req.query.removed ? req.query.removed : false
+  const limit = req.query.limit ? req.query.limit : 10
+  let maxEntries
 
-    const startIndex = ((page - 1) * limit);
+  const startIndex = (page - 1) * limit
 
-    connection.query(("SELECT COUNT(*) AS count FROM mysql.Kassenanweisungen"), (err, rows) => {
-       maxEntries = rows[0].count
-    });
+  let sql =
+    'SELECT COUNT(*) AS count FROM ' +
+    process.env.DB_NAME +
+    '.Kassenanweisungen'
 
-    var sql = "SELECT * FROM mysql.Kassenanweisungen ORDER BY Kassenanweisung_ID DESC LIMIT " + startIndex + "," + limit;
+  connection.query(sql, (err, rows) => {
+    if (err) {
+      console.log('Error: ' + err + '\n Rows: ' + rows)
+      maxEntries = 0
+    } else {
+      maxEntries = rows[0].count
+    }
+  })
 
+  sql =
+    'SELECT * FROM ' +
+    process.env.DB_NAME +
+    '.Kassenanweisungen ORDER BY Id DESC LIMIT ' +
+    startIndex +
+    ',' +
+    limit
 
-    connection.query((sql), (err, rows) => {
-        let firstpage;
-        let lastpage;
+  connection.query(sql, (err, rows) => {
+    if (err) console.log(err);
+    let firstpage
+    let lastpage
 
-        let maxpage = Math.ceil(maxEntries / limit);
+    let maxpage = Math.ceil(maxEntries / limit)
 
-        firstpage = page == 1;
+    firstpage = page == 1
 
-        lastpage = page == maxpage;
+    lastpage = page == maxpage
 
-        res.render('kaweanzeigen', {rows, page, firstpage, lastpage, updated, removed});
-    });
-}
+    console.log("Page: " + page)
 
-function viewEditKaWe (req, res) {
-
-    connection.query('SELECT * FROM mysql.Kassenanweisungen WHERE Kassenanweisung_ID = ?',[req.params.id], (err, rows) => {
-        res.render('kaweedit', {rows});
+    res.render('kaweanzeigen', {
+      rows,
+      page,
+      firstpage,
+      lastpage,
+      updated,
+      removed,
     })
+  })
 }
 
-function insertKaWe (req, res) {
-
-    const {Haushaltsjahr, Titelnr, Geldgeber, Begründung, Betrag, Geldempfänger, Zahlungsart, Beleg, Ausstellungsdatum, Zahlungsdatum} = req.body;
-    connection.query(("INSERT INTO mysql.Kassenanweisungen SET Haushaltsjahr = ?, Titelnr = ?, Geldgeber = ?, Begründung = ?, Betrag = ?, Geldempfänger = ?, Zahlungsart = ?, Beleg = ?, Ausstellungsdatum = ?, Zahlungsdatum = ?"),
-        [Haushaltsjahr, Titelnr, Geldgeber, Begründung, Betrag, Geldempfänger, Zahlungsart, Beleg, Ausstellungsdatum, Zahlungsdatum], (err) => {
-        if (err) console.log(err);
-
-        res.redirect('/');
-
-    })
+function viewEditKaWe(req, res) {
+  renderKaWeWith(req.params.id, 'kaweedit', res, { PrevPage: req.query.prevPage })
 }
 
-function deleteKaWe (req, res) {
-    connection.query(('DELETE FROM mysql.Kassenanweisungen WHERE Kassenanweisung_ID = ?'),[req.params.id], (err) => {
-        if (err) console.log(err);
-    } )
-        res.redirect('/kaweanzeigen?page=1&removed=true')
+async function insertKaWe(req, res) {
+  const {
+    Haushaltsjahr,
+    Titelnr,
+    Geldgeber,
+    Geldanlage_Geldgeber,
+    Begruendung,
+    Betrag,
+    Geldempfaenger,
+    Geldanlage_Geldempfaenger,
+    Zahlungsart,
+    Beleg,
+    Ausstellungsdatum,
+    Zahlungsdatum,
+  } = req.body
+
+
+  let GeldgeberIds = await createInhaberAndGeldanlageIfNotExists(Geldgeber, Geldanlage_Geldgeber)
+
+  let GeldempfaengerIds = await createInhaberAndGeldanlageIfNotExists(Geldempfaenger, Geldanlage_Geldempfaenger)
+
+  let sql =
+    'INSERT INTO ' +
+    process.env.DB_NAME +
+    '.Kassenanweisungen SET Haushaltsjahr = ?, Titelnr = ?, Geldanlage_Geldgeber = ?, Begruendung = ?, Betrag = ?, Geldanlage_Geldempfaenger = ?, Zahlungsart = ?, Beleg = ?, Ausstellungsdatum = ?, Zahlungsdatum = ?'
+  connection.query(
+    sql, [
+      Haushaltsjahr,
+      Titelnr,
+      GeldgeberIds.GeldanlageId,
+      Begruendung,
+      Betrag,
+      GeldempfaengerIds.GeldanlageId,
+      Zahlungsart,
+      Beleg,
+      Ausstellungsdatum,
+      Zahlungsdatum,
+    ],
+    (err) => {
+      if (err) console.log(err)
+
+      res.redirect('/')
+    },
+  )
 }
 
-function updateKaWe (req, res) {
-    const {Haushaltsjahr, Titelnr, Geldgeber, Begründung, Betrag, Geldempfänger, Zahlungsart, Beleg, Ausstellungsdatum, Zahlungsdatum} = req.body;
-    connection.query(("UPDATE mysql.Kassenanweisungen SET Haushaltsjahr = ?, Titelnr = ?, Geldgeber = ?, Begründung = ?, Betrag = ?, Geldempfänger = ?, Zahlungsart = ?, Beleg = ?, Ausstellungsdatum = ?, Zahlungsdatum = ? WHERE Kassenanweisung_ID = ?")
-    ,[Haushaltsjahr, Titelnr, Geldgeber, Begründung, Betrag, Geldempfänger, Zahlungsart, Beleg, Ausstellungsdatum, Zahlungsdatum, req.params.id], (err) => {
-        if(err) {
-            console.log(err);
-            return;
-        }
-
-            res.redirect('/kaweanzeigen?page=1&edit=true');
-        })
+function deleteKaWe(req, res) {
+  connection.query(
+    'DELETE FROM ' + process.env.DB_NAME + '.Kassenanweisungen WHERE Id = ?', [req.params.id],
+    (err) => {
+      if (err) console.log(err)
+    },
+  )
+  res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&removed=true')
 }
 
-function viewKaWe (req, res) {
-    connection.query('SELECT * FROM mysql.Kassenanweisungen WHERE Kassenanweisung_ID = ?',[req.params.id], (err, rows) => {
-        res.render('kaweview', {rows});
-    })
+async function updateKaWe(req, res) {
+  const {
+    Haushaltsjahr,
+    Titelnr,
+    Geldgeber,
+    Geldanlage_Geldgeber,
+    Begruendung,
+    Betrag,
+    Geldempfaenger,
+    Geldanlage_Geldempfaenger,
+    Zahlungsart,
+    Beleg,
+    Ausstellungsdatum,
+    Zahlungsdatum,
+  } = req.body
+
+  let GeldgeberIds = await createInhaberAndGeldanlageIfNotExists(Geldgeber, Geldanlage_Geldgeber)
+  let GeldempfaengerIds = await createInhaberAndGeldanlageIfNotExists(Geldempfaenger, Geldanlage_Geldempfaenger)
+
+  connection.query(
+    'UPDATE ' + process.env.DB_NAME + '.Kassenanweisungen SET Haushaltsjahr = ?, Titelnr = ?, Geldanlage_Geldgeber = ?, Begruendung = ?, Betrag = ?, Geldanlage_Geldempfaenger = ?, Zahlungsart = ?, Beleg = ?, Ausstellungsdatum = ?, Zahlungsdatum = ? WHERE Id = ?', [
+      Haushaltsjahr,
+      Titelnr,
+      GeldgeberIds.GeldanlageId,
+      Begruendung,
+      Betrag,
+      GeldempfaengerIds.GeldanlageId,
+      Zahlungsart,
+      Beleg,
+      Ausstellungsdatum,
+      Zahlungsdatum,
+      req.params.id,
+    ],
+    (err) => {
+      if (err) {
+        console.log(err)
+        return
+      }
+
+      res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&edit=true')
+    },
+  )
 }
 
+function viewKaWe(req, res) {
+  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage ? req.query.prevPage : 1 })
+}
+
+async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName) {
+  let inhaberId, geldanlageId
+
+  // Check if Inhaber exists and add him if not
+  const rows = await asyncQuery("SELECT Id FROM " + process.env.DB_NAME + ".Inhaber WHERE Name = ?", [inhaberName]).catch(err => { throw err })
+  if (rows.length === 0) {
+    const result = await asyncQuery("INSERT INTO " + process.env.DB_NAME + ".Inhaber SET Name=?", [inhaberName]).catch(err => { throw err })
+    inhaberId = result.insertId;
+  } else {
+    inhaberId = rows[0].Id
+  }
+  // Check if Geldanlage exists and insert if not
+  const rows2 = await asyncQuery("SELECT Id FROM " + process.env.DB_NAME + ".Geldanlagen WHERE Name = ? AND InhaberId = ?", [geldanlageName, inhaberId]).catch(err => { throw err })
+  if (rows2.length === 0) {
+    const result2 = await asyncQuery("INSERT INTO " + process.env.DB_NAME + ".Geldanlagen SET Name=?, Konto=?, InhaberId = ? ", [geldanlageName, false, inhaberId]).catch(err => { throw err })
+    geldanlageId = result2.insertId
+  } else {
+    geldanlageId = rows2[0].Id
+  }
+
+  return { InhaberId: inhaberId, GeldanlageId: geldanlageId }
+}
+
+function renderKaWeWith(id, renderFile, res, extraFields) {
+  // Dieser SQL String verbindet die Kassenanweisungstabelle mit dden Tabellen Inhaber und Geldanlagen und zeigt statt der ID der Geldanlage die
+  let sql =
+    `SELECT
+	ka.Id,
+	ka.Haushaltsjahr,
+	ka.Titelnr,
+	ka.Betrag,
+	ka.Begruendung,
+	ka.Zahlungsdatum,
+	ka.Ausstellungsdatum,
+	ka.Zahlungsart,
+	ka.Beleg,
+  ka.Geldanlage_Geldgeber,
+  ka.Geldanlage_Geldempfaenger,
+	Ga1.Name_Geldgeber,
+	Ga1.Name_Geldanlage_Geldgeber,
+	Ga2.Name_Geldempfaenger,
+	Ga2.Name_Geldanlage_Geldempfaenger 
+FROM
+  ` +
+    process.env.DB_NAME +
+    `.Kassenanweisungen ka
+LEFT JOIN (
+	SELECT
+		g.Id,
+		i.Name AS Name_Geldgeber,
+		g.Name AS Name_Geldanlage_Geldgeber
+	FROM
+    ` +
+    process.env.DB_NAME +
+    `.Geldanlagen g
+	LEFT JOIN ` +
+    process.env.DB_NAME +
+    `.Inhaber i ON
+		i.Id = g.InhaberId ) Ga1 ON
+	ka.Geldanlage_Geldgeber = Ga1.Id
+LEFT JOIN (
+	SELECT
+		g.Id,
+		i.Name AS Name_Geldempfaenger,
+		g.Name AS Name_Geldanlage_Geldempfaenger
+	FROM
+    ` +
+    process.env.DB_NAME +
+    `.Geldanlagen g
+	LEFT JOIN ` +
+    process.env.DB_NAME +
+    `.Inhaber i ON
+		i.Id = g.InhaberId ) Ga2 ON
+	ka.Geldanlage_Geldempfaenger = Ga2.Id
+WHERE ka.Id = ?`
+
+  connection.query(sql, [id], (err, rows) => {
+    if (err) console.log(err)
+    console.log("Rendering with fields: " + JSON.stringify({ rows, ...extraFields }))
+    res.render(renderFile, { rows, ...extraFields })
+  })
+}
 
 //Modelle für interne Datenbankabfragen
 
-
-
-export {viewAllKaWe, viewEditKaWe, insertKaWe, deleteKaWe, updateKaWe, viewKaWe};
-
-
-
+export {
+  viewAllKaWe,
+  viewEditKaWe,
+  insertKaWe,
+  deleteKaWe,
+  updateKaWe,
+  viewKaWe,
+}
