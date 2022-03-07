@@ -1,4 +1,3 @@
-
 <!--
 Form für für Kassenanweisung
 Haushaltsjahr: Textfeld
@@ -13,78 +12,97 @@ Ausstellungsdatum: Textfeld
 Zahlungsdatum: Textfeld
 -->
 
-{{#each rows}}
-    <div class="container abstand">
-        <h1 class="ueberschrift">Kassenanweisung betrachten</h1>
-        <form action="/" method="post" role="form" enctype="application/x-www-form-urlencoded">
-            <div class="row abstand">
-                <div class="col">
-                    <label for="haushaltsjahr">Haushaltsjahr(YY/YY): </label>
-                    <input type="text" class="form-control " name="Haushaltsjahr" id="haushaltsjahr" value="{{Haushaltsjahr}}" readonly>
-                </div>
-                <div class="col">
-                    <label for="titelnr">Titelnr: </label>
-                    <input type="text" class="form-control" name="Titelnr" id="titelnr" value ="{{Titelnr}}" readonly>
-                </div>
-            </div>
-            <div class="row abstand">
-                <div class="col">
-                    <label for="geldgeber">Geldgeber: </label>
-                    <input type="text" class="form-control " name="Geldgeber" id="geldgeber" value ="{{Geldgeber}}"readonly>
-                </div>
-                <div class="col">
-                    <label for="geldempfaenger">Geldempfänger: </label>
-                    <input type="text" class="form-control" name="Geldempfänger" id="geldempfaenger" value="{{Geldempfänger}}" readonly>
-                </div>
-            </div>
-            <div class="row abstand">
-                <div class="col">
-                    <label for="betrag">Betrag(Euro.Cent): </label>
-                    <input type="text" class="form-control" name="Betrag" id="betrag" value="{{Betrag}}" readonly>
-                </div>
-                <div class="col">
-                    <label for="zahlungsart">Zahlungsart: </label>
-                    <select name="Zahlungsart" class="custom-select" id="Zahlungsart" value="{{Zahlungsart}}" disabled>
-                        <option>Bitte wählen Sie...</option>
-                        <option value="Überweisung" {{#if (selected Zahlungsart "Überweisung")}} selected{{/if}}>Überweisung</option>
-                        <option value="Bargeldeinzahlung" {{#if (selected Zahlungsart "Bargeldeinzahlung")}} selected{{/if}}>Bargeldeinzahlung</option>
-                        <option value="Bargeldauszahlung" {{#if (selected Zahlungsart "Bargeldauszahlung")}} selected{{/if}}>Bargeldauszahlung</option>
-                        <option value="Münzgeldeinzahlung" {{#if (selected Zahlungsart "Münzgeldeinzahlung")}} selected{{/if}}>Münzgeldeinzahlung</option>
-                        <option value="Scheckeinreichung" {{#if (selected Zahlungsart "Scheckeinreichung")}} selected{{/if}}>Scheckeinreichung</option>
-                        <option value="Tresoreinzahlung" {{#if (selected Zahlungsart "Tresoreinzahlung")}} selected{{/if}}>Tresoreinzahlung</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row abstand">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="begruendung">Begründung: </label>
-                        <textarea class="form-control" rows="3" name="Begründung" id="begruendung" readonly>{{Begründung}}</textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="row abstand">
-                <div class="col">
-                    <label for="beleg">Beleg: </label>
-                    <input type="text" class="form-control" name="Beleg" id="beleg" value="{{Beleg}}" readonly>
-                </div>
-            </div>
-            <div class="row abstand">
-                <div class="col">
-                    <label for="ausstellungsdatum">Ausstellungsdatum</label>
-                    <input type="date" class="form-control" name="Ausstellungsdatum" id="ausstellungsdatum" value="{{formatdate Ausstellungsdatum}}" readonly>
-                </div>
-                <div class="col">
-                    <label for="zahlungsdatum">Zahlungsdatum</label>
-                    <input type="date" class="form-control" name="Zahlungsdatum" id="zahlungsdatum" value="{{formatdate Zahlungsdatum}}" readonly>
-                </div>
-            </div>
-            <div class="row abstand">
-                <div class="col">
-                    <a href="/kaweanzeigen" type="button" class="btn btn-success" value="Zurück">Zurück</a>
-                </div>
-            </div>
-
-        </form>
+<div class="container abstand">
+    <h1 class="ueberschrift">Kassenanweisung betrachten</h1>
+    {{#each rows}}
+    <div class="row abstand">
+        <div class="col">
+            <label for="haushaltsjahr">Haushaltsjahr(YY/YY): </label>
+            <input type="text" class="form-control " name="Haushaltsjahr" id="haushaltsjahr" value="{{Haushaltsjahr}}"
+                readonly>
+        </div>
+        <div class="col">
+            <label for="titelnr">Titelnr: </label>
+            <input type="text" class="form-control" name="Titelnr" id="titelnr" value="{{Titelnr}}" readonly>
+        </div>
     </div>
-{{/each}}
+    <div class="row abstand">
+        <div class="col">
+            <label for="geldgeber">Geldgeber: </label>
+            <input type="text" class="form-control " name="Geldgeber" id="geldgeber" value="{{Name_Geldgeber}}"
+                readonly>
+        </div>
+        <div class="col">
+            <label for="geldanlage_geldgeber">Geldanlage des Geldgebers: </label>
+            <input type="text" class="form-control " name="Geldanlage_Geldgeber" id="geldanlage_geldgeber"
+                value="{{Name_Geldanlage_Geldgeber}}" readonly>
+        </div>
+        <div class="col">
+            <label for="geldempfaenger">Geldempfänger: </label>
+            <input type="text" class="form-control" name="Geldempfaenger" id="geldempfaenger"
+                value="{{Name_Geldempfaenger}}" readonly>
+        </div>
+        <div class="col">
+            <label for="geldanlage_geldempfaenger">Geldanlage des Geldempfängers: </label>
+            <input type="text" class="form-control " name="Geldanlage_Geldempfaenger" id="geldanlage_geldempfaenger"
+                value="{{Name_Geldanlage_Geldempfaenger}}" readonly>
+        </div>
+    </div>
+    <div class="row abstand">
+        <div class="col">
+            <label for="betrag">Betrag(Euro.Cent): </label>
+            <input type="text" class="form-control" name="Betrag" id="betrag" value="{{Betrag}}" readonly>
+        </div>
+        <div class="col">
+            <label for="zahlungsart">Zahlungsart: </label>
+            <select name="Zahlungsart" class="custom-select" id="Zahlungsart" value="{{Zahlungsart}}" disabled>
+                <option>Bitte wählen Sie...</option>
+                <option value="Überweisung" {{#if (selected Zahlungsart "Überweisung" )}} selected{{/if}}>
+                    Überweisung</option>
+                <option value="Bargeldeinzahlung" {{#if (selected Zahlungsart "Bargeldeinzahlung" )}} selected{{/if}}>
+                    Bargeldeinzahlung</option>
+                <option value="Bargeldauszahlung" {{#if (selected Zahlungsart "Bargeldauszahlung" )}} selected{{/if}}>
+                    Bargeldauszahlung</option>
+                <option value="Münzgeldeinzahlung" {{#if (selected Zahlungsart "Münzgeldeinzahlung" )}} selected{{/if}}>
+                    Münzgeldeinzahlung</option>
+                <option value="Scheckeinreichung" {{#if (selected Zahlungsart "Scheckeinreichung" )}} selected{{/if}}>
+                    Scheckeinreichung</option>
+                <option value="Tresoreinzahlung" {{#if (selected Zahlungsart "Tresoreinzahlung" )}} selected{{/if}}>
+                    Tresoreinzahlung</option>
+            </select>
+        </div>
+    </div>
+    <div class="row abstand">
+        <div class="col">
+            <div class="form-group">
+                <label for="begruendung">Begründung: </label>
+                <textarea class="form-control" rows="3" name="Begruendung" id="begruendung"
+                    readonly>{{Begruendung}}</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row abstand">
+        <div class="col">
+            <label for="beleg">Beleg: </label>
+            <input type="text" class="form-control" name="Beleg" id="beleg" value="{{Beleg}}" readonly>
+        </div>
+    </div>
+    <div class="row abstand">
+        <div class="col">
+            <label for="ausstellungsdatum">Ausstellungsdatum</label>
+            <input type="date" class="form-control" name="Ausstellungsdatum" id="ausstellungsdatum"
+                value="{{formatdate Ausstellungsdatum}}" readonly>
+        </div>
+        <div class="col">
+            <label for="zahlungsdatum">Zahlungsdatum</label>
+            <input type="date" class="form-control" name="Zahlungsdatum" id="zahlungsdatum"
+                value="{{formatdate Zahlungsdatum}}" readonly>
+        </div>
+    </div>
+    {{/each}}
+    <div class="row abstand">
+        <div class="col">
+            <a href="/kaweanzeigen?page={{PrevPage}}" type="button" class="btn btn-success" value="Zurück">Zurück</a>
+        </div>
+    </div>
+</div>

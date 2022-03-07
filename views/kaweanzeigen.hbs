@@ -23,14 +23,14 @@
         <tbody>
         {{#each rows}}
             <tr>
-                <td>{{Kassenanweisung_ID}}</td>
+                <td>{{Id}}</td>
                 <td>{{Haushaltsjahr}}</td>
                 <td>{{Titelnr}}</td>
-                <td>{{Begründung}}</td>
+                <td>{{Begruendung}}</td>
                 <td>
-                    <a href="/view/{{Kassenanweisung_ID}}" type="button" class="btn btn-small btn-success">Betrachten</a>
-                    <a href="/edit/{{Kassenanweisung_ID}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
-                    <a href="/delete/{{Kassenanweisung_ID}}" type="button" class="btn btn-small btn-danger">Löschen</a>
+                    <a href="/view/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-success">Betrachten</a>
+                    <a href="/edit/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
+                    <a href="/delete/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-danger">Löschen</a>
                 </td>
             </tr>
         {{/each}}
