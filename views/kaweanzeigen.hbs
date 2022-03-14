@@ -31,6 +31,7 @@
                     <a href="/view/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-success">Betrachten</a>
                     <a href="/edit/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
                     <a href="/delete/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-danger">Löschen</a>
+                    <a href="localhost:{{../backend_port}}/kassenanweisungen/{{Id}}" type="button" class="btn btn-small btn-secondary">PDF</a>
                 </td>
             </tr>
         {{/each}}

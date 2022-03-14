@@ -46,12 +46,13 @@ function viewAllKaWe(req, res) {
     console.log("Page: " + page)
 
     res.render('kaweanzeigen', {
-      rows,
-      page,
-      firstpage,
-      lastpage,
-      updated,
-      removed,
+      rows: rows,
+      page: page,
+      firstpage: firstpage,
+      lastpage: lastpage,
+      updated: updated,
+      removed: removed,
+      backend_port: process.env.BACKEND_PORT,
     })
   })
 }
@@ -188,7 +189,7 @@ async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName
 }
 
 function renderKaWeWith(id, renderFile, res, extraFields) {
-  // Dieser SQL String verbindet die Kassenanweisungstabelle mit dden Tabellen Inhaber und Geldanlagen und zeigt statt der ID der Geldanlage die
+  // Dieser SQL String verbindet die Kassenanweisungstabelle mit den Tabellen Inhaber und Geldanlagen und zeigt statt der ID der Geldanlage den Namen
   let sql =
     `SELECT
 	ka.Id,
