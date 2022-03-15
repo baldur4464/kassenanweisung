@@ -1,22 +1,23 @@
 {{#if removed}}
     <div class="alert alert-danger alert-dismissible fade show">
-        <p>Kassenanweisung wurde erfolgreich gelöscht</p>
+        <p>Kassenprüfung wurde erfolgreich gelöscht</p>
     </div>
 {{/if}}
 
 {{#if updated}}
     <div class="alert alert-success alert-dismissible fade show">
-        <p>Kassenanweisung wurde erfolgreich aktualisiert</p>
+        <p>Kassenprüfung wurde erfolgreich aktualisiert</p>
     </div>
 {{/if}}
 <div class="container-fluid">
+    <a href="/kassenpruefungen/create/" type="button" class="btn btn-small btn-primary">Kassenprüfung erstellen</a>
     <table class="table">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Haushaltsjahr</th>
-                <th>Titelnummer</th>
-                <th>Begründung</th>
+                <th>Datum</th>
+                <th>Kasse</th>
+                <th>Betrag</th>
                 <th class="text-end">Aktionen</th>
             </tr>
         </thead>
@@ -24,14 +25,13 @@
         {{#each rows}}
             <tr>
                 <td>{{Id}}</td>
-                <td>{{Haushaltsjahr}}</td>
-                <td>{{Titelnr}}</td>
-                <td>{{Begruendung}}</td>
+                <td>{{Datum}}</td>
+                <td>{{Kasse}}</td>
+                <td>{{Betrag}}</td>
                 <td>
-                    <a href="view/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-success">Betrachten</a>
-                    <a href="edit/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
-                    <a href="delete/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-danger">Löschen</a>
-                    <a href="http://localhost:{{../backend_port}}/kassenanweisungen/{{Id}}" target="_blank" rel="noreferrer noopener" type="button" class="btn btn-small btn-secondary">PDF</a>
+                    <a href="/kassenpruefungen/view/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-success">Betrachten</a>
+                    <a href="/kassenpruefungen/edit/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
+                    <a href="/kassenpruefungen/delete/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-danger">Löschen</a>
                 </td>
             </tr>
         {{/each}}

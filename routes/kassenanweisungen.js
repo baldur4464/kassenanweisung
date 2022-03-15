@@ -4,15 +4,11 @@ import * as pdfservice from "../services/KassenanweisungPDF.js";
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.render('kassenanweisung')
-});
-
 router.post('/', (req, res) => {
   model.insertKaWe(req, res);
 })
 
-router.get('/kaweanzeigen', (req, res) => {
+router.get('/', (req, res) => {
   model.viewAllKaWe(req, res);
 })
 
@@ -32,7 +28,7 @@ router.get('/view/:id', (req, res) => {
   model.viewKaWe(req, res);
 })
 
-router.get('/kawedownload', (req, res) => {
+router.get('/download', (req, res) => {
   pdfservice.kassenanweisungdownload(req, res);
 })
 
