@@ -6,14 +6,26 @@ function viewAllKaWe(req, res) {
   const updated = req.query.edit ? req.query.edit : false
   const removed = req.query.removed ? req.query.removed : false
   const limit = req.query.limit ? req.query.limit : 10
+  const filter = req.query.filter ? req.query.filter : null
+  let filterIsTrue
   let maxEntries
-
+  let haushaltsjahre
+  let sql
   const startIndex = (page - 1) * limit
 
-  let sql =
-    'SELECT COUNT(*) AS count FROM ' +
-    process.env.DB_NAME +
-    '.Kassenanweisungen'
+  if(filter != null){
+    sql =
+        'SELECT COUNT(*) AS count FROM ' +
+        process.env.DB_NAME +
+        '.Kassenanweisungen WHERE Haushaltsjahr =' +
+        "'"+filter+"'"
+  } else {
+    sql =
+        'SELECT COUNT(*) AS count FROM ' +
+        process.env.DB_NAME +
+        '.Kassenanweisungen'
+
+  }
 
   connection.query(sql, (err, rows) => {
     if (err) {
@@ -25,12 +37,36 @@ function viewAllKaWe(req, res) {
   })
 
   sql =
+      'SELECT DISTINCT Haushaltsjahr FROM ' +
+      process.env.DB_NAME +
+      '.Kassenanweisungen';
+
+  connection.query(sql, (err, result) => {
+    if (err) console.log(err)
+    haushaltsjahre = result;
+  })
+
+  if (filter != null) {
+  sql =
     'SELECT * FROM ' +
     process.env.DB_NAME +
-    '.Kassenanweisungen ORDER BY Id DESC LIMIT ' +
+    '.Kassenanweisungen WHERE Haushaltsjahr='+
+    "'" + filter + "'" +
+    ' ORDER BY Id DESC LIMIT ' +
     startIndex +
     ',' +
     limit
+    filterIsTrue = true;
+  } else {
+    sql =
+        'SELECT * FROM ' +
+        process.env.DB_NAME +
+        '.Kassenanweisungen ORDER BY Id DESC LIMIT ' +
+        startIndex +
+        ',' +
+        limit
+    filterIsTrue = false;
+  }
 
   connection.query(sql, (err, rows) => {
     if (err) console.log(err);
@@ -39,14 +75,18 @@ function viewAllKaWe(req, res) {
 
     let maxpage = Math.ceil(maxEntries / limit)
 
+    //Booleans zum Prüfen, ob sich die AKtuelle Page auf der ersten oder letzten Page befindet.
     firstpage = page == 1
-
     lastpage = page == maxpage
 
     console.log("Page: " + page)
 
     res.render('kaweanzeigen', {
       rows,
+      haushaltsjahre,
+      maxpage,
+      filterIsTrue,
+      filter,
       page,
       firstpage,
       lastpage,
@@ -57,7 +97,7 @@ function viewAllKaWe(req, res) {
 }
 
 function viewEditKaWe(req, res) {
-  renderKaWeWith(req.params.id, 'kaweedit', res, { PrevPage: req.query.prevPage })
+  renderKaWeWith(req.params.id, 'kaweedit', res, { PrevPage: req.query.prevPage})
 }
 
 async function insertKaWe(req, res) {
@@ -188,7 +228,7 @@ async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName
 }
 
 function renderKaWeWith(id, renderFile, res, extraFields) {
-  // Dieser SQL String verbindet die Kassenanweisungstabelle mit dden Tabellen Inhaber und Geldanlagen und zeigt statt der ID der Geldanlage die
+  // Dieser SQL String verbindet die Kassenanweisungstabelle mit den Tabellen Inhaber und Geldanlagen und zeigt statt der ID der Geldanlage die
   let sql =
     `SELECT
 	ka.Id,
