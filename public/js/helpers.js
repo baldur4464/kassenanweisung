@@ -12,5 +12,8 @@ export default {
     },
     prevpage: function (page) {
         return parseInt(page) - 1;
+    },
+    selectfilter: function(filter) {
+
     }
 }

@@ -1,3 +1,18 @@
+<nav class="navbar navbar-dark bg-dark">
+    <div class="btn-group">
+        <button type="button" class="btn btn-success">Filter nach Haushaltsjahr</button>
+        <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu">
+            {{#each haushaltsjahre}}
+            <a class="dropdown-item" href="?page=1&filter={{Haushaltsjahr}}">{{Haushaltsjahr}}</a>
+            {{/each}}
+        </div>
+    </div>
+</nav>
+
+
 {{#if removed}}
     <div class="alert alert-danger alert-dismissible fade show">
         <p>Kassenanweisung wurde erfolgreich gelöscht</p>
@@ -28,9 +43,9 @@
                 <td>{{Titelnr}}</td>
                 <td>{{Begruendung}}</td>
                 <td>
-                    <a href="/view/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-success">Betrachten</a>
-                    <a href="/edit/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
-                    <a href="/delete/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-danger">Löschen</a>
+                    <a href="/view/{{Id}}?prevPage={{../page}}{{#if ../filterIsTrue}}&prevFilter={{../filter}}{{/if}}" type="button" class="btn btn-small btn-success">Betrachten</a>
+                    <a href="/edit/{{Id}}?prevPage={{../page}}{{#if ../filterIsTrue}}&prevFilter={{../filter}}{{/if}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
+                    <a href="/delete/{{Id}}?prevPage={{../page}}{{#if ../filterIsTrue}}&prevFilter={{../filter}}{{/if}}" type="button" class="btn btn-small btn-danger">Löschen</a>
                 </td>
             </tr>
         {{/each}}
@@ -39,11 +54,14 @@
     <div class="d-flex abstand paging">
         <ul class="pagination">
             <li class="page-item {{#if firstpage}}disabled{{/if}}">
-                <a class="page-link" href="?page={{prevpage page}}">Vorherige Seite</a>
+                <a class="page-link" href="?page={{prevpage page}}{{#if filterIsTrue}}&filter={{filter}}{{/if}}">Vorherige Seite</a>
             </li>
             <li class="page-item {{#if lastpage}}disabled{{/if}}">
-                <a class="page-link" href="?page={{nextpage page}}">Nächste Seite</a>
+                <a class="page-link" href="?page={{nextpage page}}{{#if filterIsTrue}}&filter={{filter}}{{/if}}">Nächste Seite</a>
             </li>
         </ul>
+    </div>
+    <div class="d-flex justify-content-center">
+        <p>Seite {{page}} von {{maxpage}}</p>
     </div>
 </div>
