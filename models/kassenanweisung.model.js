@@ -53,6 +53,7 @@ function viewAllKaWe(req, res) {
       updated: updated,
       removed: removed,
       backend_port: process.env.BACKEND_PORT,
+      host_ip: req.ip,
     })
   })
 }
@@ -156,7 +157,7 @@ async function updateKaWe(req, res) {
         return
       }
 
-      res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&edit=true')
+      res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&edit=true')
     },
   )
 }

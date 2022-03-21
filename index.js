@@ -27,18 +27,17 @@ app.engine('hbs', exphbs({
   extname: '.hbs',
   helpers: helpers
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use("/public", express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
   res.render('kassenanweisung')
 });
+
 app.use('/kassenanweisungen', router);
 app.use("/kassenpruefungen", kpRouter);
 
 
-
 app.listen(port, () => {
   console.log(`The web server has started on port ${port}`);
-  console.log("Web server provides the following paths: " + app._router)
 })

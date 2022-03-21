@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node index",
-    "develop": "nodemon index"
+    "develop": "nodemon index",
+    "debug": "DEBUG=express:* node index.js"
   },
   "author": "Patrick Schmidt",
   "license": "ISC",

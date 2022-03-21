@@ -28,10 +28,10 @@
                 <td>{{Titelnr}}</td>
                 <td>{{Begruendung}}</td>
                 <td>
-                    <a href="view/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-success">Betrachten</a>
-                    <a href="edit/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
-                    <a href="delete/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-danger">Löschen</a>
-                    <a href="http://localhost:{{../backend_port}}/kassenanweisungen/{{Id}}" target="_blank" rel="noreferrer noopener" type="button" class="btn btn-small btn-secondary">PDF</a>
+                    <a href="/kassenanweisungen/view/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-success">Betrachten</a>
+                    <a href="/kassenanweisungen/edit/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
+                    <a href="/kassenanweisungen/delete/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-danger">Löschen</a>
+                    <a href="http://{{../host_ip}}:{{../backend_port}}/kassenanweisungen/{{Id}}" target="_blank" rel="noreferrer noopener" type="button" class="btn btn-small btn-secondary">PDF</a>
                 </td>
             </tr>
         {{/each}}
