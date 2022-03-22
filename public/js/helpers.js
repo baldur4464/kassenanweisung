@@ -13,7 +13,13 @@ export default {
     prevpage: function (page) {
         return parseInt(page) - 1;
     },
-    selectfilter: function(filter) {
-
+    filterTrue: function(filter) {
+        if(filter != null && filter != "") {
+            console.log("filter is true")
+            return true
+        } else {
+            console.log("filter is false")
+            return false
+        }
     }
 }
