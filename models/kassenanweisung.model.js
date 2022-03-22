@@ -12,6 +12,7 @@ function viewAllKaWe(req, res) {
   let haushaltsjahre
   let sql
   const startIndex = (page - 1) * limit
+  console.log(req.query.filter)
 
   if(filter != null){
     sql =
@@ -97,7 +98,7 @@ function viewAllKaWe(req, res) {
 }
 
 function viewEditKaWe(req, res) {
-  renderKaWeWith(req.params.id, 'kaweedit', res, { PrevPage: req.query.prevPage})
+  renderKaWeWith(req.params.id, 'kaweedit', res, {PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter})
 }
 
 async function insertKaWe(req, res) {
@@ -172,6 +173,7 @@ async function updateKaWe(req, res) {
     Zahlungsdatum,
   } = req.body
 
+
   let GeldgeberIds = await createInhaberAndGeldanlageIfNotExists(Geldgeber, Geldanlage_Geldgeber)
   let GeldempfaengerIds = await createInhaberAndGeldanlageIfNotExists(Geldempfaenger, Geldanlage_Geldempfaenger)
 
@@ -194,14 +196,17 @@ async function updateKaWe(req, res) {
         console.log(err)
         return
       }
-
-      res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&edit=true')
-    },
+      if(req.query.prevFilter != null && req.query.prevFilter != "") {
+        res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&filter=' + req.query.prevFilter + '&edit=true')
+      } else {
+        res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&edit=true')
+      }
+    }
   )
 }
 
 function viewKaWe(req, res) {
-  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage ? req.query.prevPage : 1 })
+  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage,  PrevFilter: req.query.prevFilter })
 }
 
 async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName) {
@@ -229,6 +234,8 @@ async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName
 
 function renderKaWeWith(id, renderFile, res, extraFields) {
   // Dieser SQL String verbindet die Kassenanweisungstabelle mit den Tabellen Inhaber und Geldanlagen und zeigt statt der ID der Geldanlage die
+
+
   let sql =
     `SELECT
 	ka.Id,

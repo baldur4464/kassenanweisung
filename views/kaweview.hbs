@@ -102,7 +102,7 @@ Zahlungsdatum: Textfeld
     {{/each}}
     <div class="row abstand">
         <div class="col">
-            <a href="/kaweanzeigen?page={{PrevPage}}" type="button" class="btn btn-success" value="Zurück">Zurück</a>
+            <a href="/kaweanzeigen?page={{PrevPage}}{{#if (filterTrue PrevFilter)}}&filter={{PrevFilter}}{{/if}}" type="button" class="btn btn-success" value="Zurück">Zurück</a>
         </div>
     </div>
 </div>
