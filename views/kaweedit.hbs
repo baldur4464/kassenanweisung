@@ -53,7 +53,6 @@ Zahlungsdatum: Textfeld
             <div class="col">
                 <label for="zahlungsart">Zahlungsart: </label>
                 <select name="Zahlungsart" class="custom-select" id="Zahlungsart" value="{{Zahlungsart}}">
-                    <option>Bitte wählen Sie...</option>
                     <option value="Überweisung" {{#if (selected Zahlungsart "Überweisung")}} selected{{/if}}>Überweisung</option>
                     <option value="Bargeldeinzahlung" {{#if (selected Zahlungsart "Bargeldeinzahlung")}} selected{{/if}}>Bargeldeinzahlung</option>
                     <option value="Bargeldauszahlung" {{#if (selected Zahlungsart "Bargeldauszahlung")}} selected{{/if}}>Bargeldauszahlung</option>
@@ -73,10 +72,20 @@ Zahlungsdatum: Textfeld
         </div>
         <div class="row abstand">
             <div class="col">
-                <label for="beleg">Beleg: </label>
-                <input type="text" class="form-control" name="Beleg" id="beleg" value="{{Beleg}}">
+                <label  for="beleg">Beleg: </label>
+                <select class="custom-select" name="Beleg" id="beleg">
+                    <option {{#if (oneOf Beleg "Rechnung")}}selected{{/if}} value="Rechnung">Rechnung</option>
+                    <option {{#if (oneOf Beleg "Quittung")}}selected{{/if}} value="Quittung">Quittung</option>
+                    <option {{#if (oneOf Beleg "Überweisungsbeleg")}}selected{{/if}} value="Überweisungsbeleg">Überweisungsbeleg</option>
+                </select>
             </div>
         </div>
+<script type="text/javascript">
+    const multiSelect = new IconicMultiSelect({
+        select: "#beleg",
+    });
+    multiSelect.init();
+</script>
         <div class="row abstand">
             <div class="col">
                 <label for="ausstellungsdatum">Ausstellungsdatum</label>

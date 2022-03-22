@@ -1,16 +1,23 @@
-import moment from "moment"
+import moment from "moment";
 
 export default {
-    formatdate: function (date) {
-        return moment(date).format('yyyy-MM-DD');
-    },
-    selected: function (Zahlungsart, option) {
-        return Zahlungsart == option;
-    },
-    nextpage: function (page) {
-        return parseInt(page) + 1;
-    },
-    prevpage: function (page) {
-        return parseInt(page) - 1;
-    }
-}
+  formatdate: function(date) {
+    return moment(date).format("yyyy-MM-DD");
+  },
+  selected: function(value, option) {
+    return value == option;
+  },
+  nextpage: function(page) {
+    return parseInt(page) + 1;
+  },
+  prevpage: function(page) {
+    return parseInt(page) - 1;
+  },
+  oneOf: function(options, value) {
+    let optarr = options.split(",");
+    let res = optarr.find((opt) => {
+      return opt.trim() === value
+    });
+    return res !== undefined
+  },
+};
