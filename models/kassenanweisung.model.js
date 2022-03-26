@@ -90,7 +90,7 @@ function viewAllKaWe(req, res) {
       updated: updated,
       removed: removed,
       backend_port: process.env.BACKEND_PORT,
-      host_ip: req.ip,
+      host_ip: req.connection.remoteAddress,
       haushaltsjahre: haushaltsjahre,
       maxpage: maxpage,
       filterIsTrue: filterIsTrue,
