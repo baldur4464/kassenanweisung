@@ -16,7 +16,7 @@ Zahlungsdatum: Textfeld
 {{#each rows}}
 <div class="container abstand">
     <h1 class="ueberschrift">Kassenanweisung bearbeiten</h1>
-    <form action="/kassenanweisungen/edit/{{Id}}?prevPage={{../PrevPage}}" method="post" role="form" enctype="application/x-www-form-urlencoded">
+    <form action="/kassenanweisungen/edit/{{Id}}?prevPage={{../PrevPage}}{{#if (filterTrue ../PrevFilter)}}&prevFilter={{../PrevFilter}}{{/if}}" method="post" role="form" enctype="application/x-www-form-urlencoded">
         <div class="row abstand">
             <div class="col">
                 <label for="haushaltsjahr">Haushaltsjahr(YY/YY): </label>
@@ -99,7 +99,7 @@ Zahlungsdatum: Textfeld
         <div class="row abstand">
             <div class="col">
                 <input type="submit" class="btn btn-success" value="Absenden">
-                <a href="/kassenanweisungen?page={{../PrevPage}}" type="button" class="btn btn-primary" value="Zurück">Zurück</a>
+                <a href="/kassenanweisungen?page={{../PrevPage}}{{#if (filterTrue ../PrevFilter)}}&filter={{../PrevFilter}}{{/if}}" type="button" class="btn btn-primary" value="Zurück">Zurück</a>
             </div>
         </div>
 

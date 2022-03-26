@@ -6,14 +6,27 @@ function viewAllKaWe(req, res) {
   const updated = req.query.edit ? req.query.edit : false
   const removed = req.query.removed ? req.query.removed : false
   const limit = req.query.limit ? req.query.limit : 10
+  const filter = req.query.filter ? req.query.filter : null
+  let filterIsTrue
   let maxEntries
-
+  let haushaltsjahre
+  let sql
   const startIndex = (page - 1) * limit
+  console.log(req.query.filter)
 
-  let sql =
-    'SELECT COUNT(*) AS count FROM ' +
-    process.env.DB_NAME +
-    '.Kassenanweisungen'
+  if (filter != null) {
+    sql =
+      'SELECT COUNT(*) AS count FROM ' +
+      process.env.DB_NAME +
+      '.Kassenanweisungen WHERE Haushaltsjahr =' +
+      "'" + filter + "'"
+  } else {
+    sql =
+      'SELECT COUNT(*) AS count FROM ' +
+      process.env.DB_NAME +
+      '.Kassenanweisungen'
+
+  }
 
   connection.query(sql, (err, rows) => {
     if (err) {
@@ -25,12 +38,36 @@ function viewAllKaWe(req, res) {
   })
 
   sql =
-    'SELECT * FROM ' +
+    'SELECT DISTINCT Haushaltsjahr FROM ' +
     process.env.DB_NAME +
-    '.Kassenanweisungen ORDER BY Id DESC LIMIT ' +
-    startIndex +
-    ',' +
-    limit
+    '.Kassenanweisungen';
+
+  connection.query(sql, (err, result) => {
+    if (err) console.log(err)
+    haushaltsjahre = result;
+  })
+
+  if (filter != null) {
+    sql =
+      'SELECT * FROM ' +
+      process.env.DB_NAME +
+      '.Kassenanweisungen WHERE Haushaltsjahr=' +
+      "'" + filter + "'" +
+      ' ORDER BY Id DESC LIMIT ' +
+      startIndex +
+      ',' +
+      limit
+    filterIsTrue = true;
+  } else {
+    sql =
+      'SELECT * FROM ' +
+      process.env.DB_NAME +
+      '.Kassenanweisungen ORDER BY Id DESC LIMIT ' +
+      startIndex +
+      ',' +
+      limit
+    filterIsTrue = false;
+  }
 
   connection.query(sql, (err, rows) => {
     if (err) console.log(err);
@@ -39,8 +76,8 @@ function viewAllKaWe(req, res) {
 
     let maxpage = Math.ceil(maxEntries / limit)
 
+    //Booleans zum Prüfen, ob sich die AKtuelle Page auf der ersten oder letzten Page befindet.
     firstpage = page == 1
-
     lastpage = page == maxpage
 
     console.log("Page: " + page)
@@ -54,12 +91,16 @@ function viewAllKaWe(req, res) {
       removed: removed,
       backend_port: process.env.BACKEND_PORT,
       host_ip: req.ip,
+      haushaltsjahre: haushaltsjahre,
+      maxpage: maxpage,
+      filterIsTrue: filterIsTrue,
+      filter: filter,
     })
   })
 }
 
 function viewEditKaWe(req, res) {
-  renderKaWeWith(req.params.id, 'kaweedit', res, { PrevPage: req.query.prevPage })
+  renderKaWeWith(req.params.id, 'kaweedit', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter })
 }
 
 async function insertKaWe(req, res) {
@@ -134,6 +175,7 @@ async function updateKaWe(req, res) {
     Zahlungsdatum,
   } = req.body
 
+
   let GeldgeberIds = await createInhaberAndGeldanlageIfNotExists(Geldgeber, Geldanlage_Geldgeber)
   let GeldempfaengerIds = await createInhaberAndGeldanlageIfNotExists(Geldempfaenger, Geldanlage_Geldempfaenger)
 
@@ -156,14 +198,17 @@ async function updateKaWe(req, res) {
         console.log(err)
         return
       }
-
-      res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&edit=true')
-    },
+      if (req.query.prevFilter != null && req.query.prevFilter != "") {
+        res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&filter=' + req.query.prevFilter + '&edit=true')
+      } else {
+        res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&edit=true')
+      }
+    }
   )
 }
 
 function viewKaWe(req, res) {
-  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage ? req.query.prevPage : 1 })
+  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter })
 }
 
 async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName) {

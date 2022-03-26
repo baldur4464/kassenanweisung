@@ -20,4 +20,13 @@ export default {
     });
     return res !== undefined
   },
+  filterTrue: function(filter) {
+    if (filter != null && filter != "") {
+      console.log("filter is true")
+      return true
+    } else {
+      console.log("filter is false")
+      return false
+    }
+  }
 };
