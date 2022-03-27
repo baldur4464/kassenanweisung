@@ -75,6 +75,8 @@ function viewAllKaWe(req, res) {
     let lastpage
 
     let maxpage = Math.ceil(maxEntries / limit)
+    let hostIPs = req.connection.remoteAddress.split(":")
+    let hostIP = hostIPs[hostIPs.length - 1]
 
     //Booleans zum Prüfen, ob sich die AKtuelle Page auf der ersten oder letzten Page befindet.
     firstpage = page == 1
@@ -90,7 +92,7 @@ function viewAllKaWe(req, res) {
       updated: updated,
       removed: removed,
       backend_port: process.env.BACKEND_PORT,
-      host_ip: req.connection.remoteAddress,
+      host_ip: hostIP,
       haushaltsjahre: haushaltsjahre,
       maxpage: maxpage,
       filterIsTrue: filterIsTrue,
