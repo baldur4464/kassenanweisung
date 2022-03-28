@@ -1,0 +1,49 @@
+{{#if removed}}
+    <div class="alert alert-danger alert-dismissible fade show">
+        <p>Kassenprüfung wurde erfolgreich gelöscht</p>
+    </div>
+{{/if}}
+
+{{#if updated}}
+    <div class="alert alert-success alert-dismissible fade show">
+        <p>Kassenprüfung wurde erfolgreich aktualisiert</p>
+    </div>
+{{/if}}
+<div class="container-fluid">
+    <a href="/kassenpruefungen/create/" type="button" class="btn btn-small btn-primary">Kassenprüfung erstellen</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Datum</th>
+                <th>Kasse</th>
+                <th>Betrag</th>
+                <th class="text-end">Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each rows}}
+            <tr>
+                <td>{{Id}}</td>
+                <td>{{Datum}}</td>
+                <td>{{Kasse}}</td>
+                <td>{{Betrag}}</td>
+                <td>
+                    <a href="/kassenpruefungen/edit/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
+                    <a href="/kassenpruefungen/delete/{{Id}}?prevPage={{../page}}" type="button" class="btn btn-small btn-danger">Löschen</a>
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+    <div class="d-flex abstand paging">
+        <ul class="pagination">
+            <li class="page-item {{#if firstpage}}disabled{{/if}}">
+                <a class="page-link" href="?page={{prevpage page}}">Vorherige Seite</a>
+            </li>
+            <li class="page-item {{#if lastpage}}disabled{{/if}}">
+                <a class="page-link" href="?page={{nextpage page}}">Nächste Seite</a>
+            </li>
+        </ul>
+    </div>
+</div>

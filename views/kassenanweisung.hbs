@@ -15,29 +15,29 @@ Zahlungsdatum: Textfeld
 
 <div class="container abstand">
     <h1 class="ueberschrift">Neue Kassenanweisung erstellen</h1>
-    <form action="/" method="post" role="form" enctype="application/x-www-form-urlencoded">
+    <form action="/kassenanweisungen" method="post" role="form" enctype="application/x-www-form-urlencoded">
         <div class="row abstand">
             <div class="col">
                 <label for="haushaltsjahr">Haushaltsjahr(YY/YY): </label>
-                <input type="text" class="form-control " name="Haushaltsjahr" id="haushaltsjahr">
+                <input type="text" class="form-control " name="Haushaltsjahr" id="haushaltsjahr" value="{{haushaltsjahr}}">
             </div>
             <div class="col">
                 <label for="titelnr">Titelnr: </label>
-                <input type="text" class="form-control" name="Titelnr" id="titelnr">
+                <input type="text" class="form-control" name="Titelnr" id="titelnr" value="{{titelnr}}" disabled>
             </div>
         </div>
         <div class="row abstand">
             <div class="col">
                 <label for="geldgeber">Geldgeber: </label>
-                <input type="text" class="form-control " name="Geldgeber" id="geldgeber">
+                <input type="text" class="form-control " name="Geldgeber" id="geldgeber" onchange="{{onChange_Geldgeber}}">
             </div>
             <div class="col">
-                <label for="geldanlage_geldgeber">Geldanlage des Geldgebers: </label>
+                <label for="geldanlage_geldgeber">Geldanlage des Geldgebers: (Barkasse, Konto, ...)</label>
                 <input type="text" class="form-control " name="Geldanlage_Geldgeber" id="geldanlage_geldgeber">
             </div>
             <div class="col">
                 <label for="geldempfaenger">Geldempfänger: </label>
-                <input type="text" class="form-control" name="Geldempfaenger" id="geldempfaenger">
+                <input type="text" class="form-control" name="Geldempfaenger" id="geldempfaenger" onchange="{{onChange_Geldempfaenger}}">
             </div>
             <div class="col">
                 <label for="geldanlage_geldempfaenger">Geldanlage des Geldempfängers: </label>
@@ -50,9 +50,8 @@ Zahlungsdatum: Textfeld
                 <input type="text" class="form-control" name="Betrag" id="betrag">
             </div>
             <div class="col">
-                <label for="zahlungsart">Zahlungsart: </label>
+                <label for="Zahlungsart" >Zahlungsart</label>
                 <select name="Zahlungsart" class="custom-select" id="Zahlungsart">
-                    <option selected>Bitte wählen Sie...</option>
                     <option value="Überweisung">Überweisung</option>
                     <option value="Bargeldeinzahlung">Bargeldeinzahlung</option>
                     <option value="Bargeldauszahlung">Bargeldauszahlung</option>
@@ -72,8 +71,12 @@ Zahlungsdatum: Textfeld
         </div>
         <div class="row abstand">
             <div class="col">
-                <label for="beleg">Beleg: </label>
-                <input type="text" class="form-control" name="Beleg" id="beleg">
+                <label  for="beleg">Beleg: </label>
+                <select class="custom-select" name="Beleg" id="beleg">
+                    <option value="Rechnung">Rechnung</option>
+                    <option value="Quittung">Quittung</option>
+                    <option value="Überweisungsbeleg">Überweisungsbeleg</option>
+                </select>
             </div>
         </div>
         <div class="row abstand">
@@ -95,3 +98,8 @@ Zahlungsdatum: Textfeld
 
     </form>
 </div>
+<script type="text/javascript">
+    const multiSelect = new IconicMultiSelect({
+        select: "#beleg",
+    });
+</script>

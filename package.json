@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon index"
+    "start": "node index",
+    "develop": "nodemon index",
+    "debug": "DEBUG=express:* node index.js"
   },
   "author": "Patrick Schmidt",
   "license": "ISC",
@@ -15,6 +17,7 @@
     "express-handlebars": "^5.3.4",
     "moment": "^2.29.1",
     "mysql": "^2.18.1",
+    "node-fetch": "^3.2.3",
     "num-words-de": "^1.0.0",
     "pdffiller": "0.0.11"
   }

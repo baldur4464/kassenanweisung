@@ -14,17 +14,17 @@ function viewAllKaWe(req, res) {
   const startIndex = (page - 1) * limit
   console.log(req.query.filter)
 
-  if(filter != null){
+  if (filter != null) {
     sql =
-        'SELECT COUNT(*) AS count FROM ' +
-        process.env.DB_NAME +
-        '.Kassenanweisungen WHERE Haushaltsjahr =' +
-        "'"+filter+"'"
+      'SELECT COUNT(*) AS count FROM ' +
+      process.env.DB_NAME +
+      '.Kassenanweisungen WHERE Haushaltsjahr =' +
+      "'" + filter + "'"
   } else {
     sql =
-        'SELECT COUNT(*) AS count FROM ' +
-        process.env.DB_NAME +
-        '.Kassenanweisungen'
+      'SELECT COUNT(*) AS count FROM ' +
+      process.env.DB_NAME +
+      '.Kassenanweisungen'
 
   }
 
@@ -38,9 +38,9 @@ function viewAllKaWe(req, res) {
   })
 
   sql =
-      'SELECT DISTINCT Haushaltsjahr FROM ' +
-      process.env.DB_NAME +
-      '.Kassenanweisungen';
+    'SELECT DISTINCT Haushaltsjahr FROM ' +
+    process.env.DB_NAME +
+    '.Kassenanweisungen';
 
   connection.query(sql, (err, result) => {
     if (err) console.log(err)
@@ -48,24 +48,24 @@ function viewAllKaWe(req, res) {
   })
 
   if (filter != null) {
-  sql =
-    'SELECT * FROM ' +
-    process.env.DB_NAME +
-    '.Kassenanweisungen WHERE Haushaltsjahr='+
-    "'" + filter + "'" +
-    ' ORDER BY Id DESC LIMIT ' +
-    startIndex +
-    ',' +
-    limit
+    sql =
+      'SELECT * FROM ' +
+      process.env.DB_NAME +
+      '.Kassenanweisungen WHERE Haushaltsjahr=' +
+      "'" + filter + "'" +
+      ' ORDER BY Id DESC LIMIT ' +
+      startIndex +
+      ',' +
+      limit
     filterIsTrue = true;
   } else {
     sql =
-        'SELECT * FROM ' +
-        process.env.DB_NAME +
-        '.Kassenanweisungen ORDER BY Id DESC LIMIT ' +
-        startIndex +
-        ',' +
-        limit
+      'SELECT * FROM ' +
+      process.env.DB_NAME +
+      '.Kassenanweisungen ORDER BY Id DESC LIMIT ' +
+      startIndex +
+      ',' +
+      limit
     filterIsTrue = false;
   }
 
@@ -75,6 +75,8 @@ function viewAllKaWe(req, res) {
     let lastpage
 
     let maxpage = Math.ceil(maxEntries / limit)
+    let hostIPs = req.connection.remoteAddress.split(":")
+    let hostIP = hostIPs[hostIPs.length - 1]
 
     //Booleans zum Prüfen, ob sich die AKtuelle Page auf der ersten oder letzten Page befindet.
     firstpage = page == 1
@@ -83,22 +85,24 @@ function viewAllKaWe(req, res) {
     console.log("Page: " + page)
 
     res.render('kaweanzeigen', {
-      rows,
-      haushaltsjahre,
-      maxpage,
-      filterIsTrue,
-      filter,
-      page,
-      firstpage,
-      lastpage,
-      updated,
-      removed,
+      rows: rows,
+      page: page,
+      firstpage: firstpage,
+      lastpage: lastpage,
+      updated: updated,
+      removed: removed,
+      backend_port: process.env.BACKEND_PORT,
+      host_ip: hostIP,
+      haushaltsjahre: haushaltsjahre,
+      maxpage: maxpage,
+      filterIsTrue: filterIsTrue,
+      filter: filter,
     })
   })
 }
 
 function viewEditKaWe(req, res) {
-  renderKaWeWith(req.params.id, 'kaweedit', res, {PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter})
+  renderKaWeWith(req.params.id, 'kaweedit', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter })
 }
 
 async function insertKaWe(req, res) {
@@ -196,7 +200,7 @@ async function updateKaWe(req, res) {
         console.log(err)
         return
       }
-      if(req.query.prevFilter != null && req.query.prevFilter != "") {
+      if (req.query.prevFilter != null && req.query.prevFilter != "") {
         res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&filter=' + req.query.prevFilter + '&edit=true')
       } else {
         res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&edit=true')
@@ -206,7 +210,7 @@ async function updateKaWe(req, res) {
 }
 
 function viewKaWe(req, res) {
-  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage,  PrevFilter: req.query.prevFilter })
+  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter })
 }
 
 async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName) {
@@ -233,9 +237,7 @@ async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName
 }
 
 function renderKaWeWith(id, renderFile, res, extraFields) {
-  // Dieser SQL String verbindet die Kassenanweisungstabelle mit den Tabellen Inhaber und Geldanlagen und zeigt statt der ID der Geldanlage die
-
-
+  // Dieser SQL String verbindet die Kassenanweisungstabelle mit den Tabellen Inhaber und Geldanlagen und zeigt statt der ID der Geldanlage den Namen
   let sql =
     `SELECT
 	ka.Id,
