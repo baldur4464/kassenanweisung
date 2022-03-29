@@ -12,5 +12,4 @@
 + Vorlage für Kassenanweisung erstellen
 + Feedback für erfolgreiches erstellen von Kassenanweisung
 
-##Bugs
-+ Delete-Funktion hat Falsche Route
+## Bugs

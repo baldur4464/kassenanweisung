@@ -152,13 +152,18 @@ async function insertKaWe(req, res) {
 }
 
 function deleteKaWe(req, res) {
+  console.log(req.query)
   connection.query(
     'DELETE FROM ' + process.env.DB_NAME + '.Kassenanweisungen WHERE Id = ?', [req.params.id],
     (err) => {
       if (err) console.log(err)
     },
   )
-  res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&removed=true')
+  if(req.query.prevFilter != null && req.query.prevFilter != "") {
+    res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&filter=' + req.query.prevFilter + '&limit=' + req.query.prevLimit + '&removed=true')
+  } else {
+    res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&limit=' + req.query.prevLimit + '&removed=true')
+  }
 }
 
 async function updateKaWe(req, res) {
