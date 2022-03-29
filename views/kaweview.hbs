@@ -11,7 +11,7 @@ Beleg: Textfeld
 Ausstellungsdatum: Textfeld
 Zahlungsdatum: Textfeld
 -->
-
+{{PrevLimit}}
 <div class="container abstand">
     <h1 class="ueberschrift">Kassenanweisung betrachten</h1>
     {{#each rows}}
@@ -102,7 +102,7 @@ Zahlungsdatum: Textfeld
     {{/each}}
     <div class="row abstand">
         <div class="col">
-            <a href="/kassenanweisungen?page={{PrevPage}}{{#if (filterTrue PrevFilter)}}&filter={{PrevFilter}}{{/if}}" type="button" class="btn btn-success" value="Zurück">Zurück</a>
+            <a href="/kassenanweisungen?page={{PrevPage}}{{#if (filterTrue PrevFilter)}}&filter={{PrevFilter}}{{/if}}{{#if (limitTrue PrevLimit)}}&limit={{PrevLimit}}{{/if}}" type="button" class="btn btn-success" value="Zurück">Zurück</a>
         </div>
     </div>
 </div>

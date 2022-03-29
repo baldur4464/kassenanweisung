@@ -1,4 +1,5 @@
 import moment from "moment";
+import connection from "../../models/db.js"
 
 export default {
   formatdate: function(date) {
@@ -22,10 +23,15 @@ export default {
   },
   filterTrue: function(filter) {
     if (filter != null && filter != "") {
-      console.log("filter is true")
       return true
     } else {
-      console.log("filter is false")
+      return false
+    }
+  },
+  limitTrue: function(limit) {
+    if (limit != null && limit != 0) {
+      return true
+    } else {
       return false
     }
   }

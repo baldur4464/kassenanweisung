@@ -6,8 +6,19 @@
         </button>
         <div class="dropdown-menu">
             {{#each haushaltsjahre}}
-            <a class="dropdown-item" href="?page=1&filter={{Haushaltsjahr}}">{{Haushaltsjahr}}</a>
+            <a class="dropdown-item" href="?page=1&filter={{Haushaltsjahr}}{{#if (limitTrue ../limit)}}&limit={{../limit}}{{/if}}">{{Haushaltsjahr}}</a>
             {{/each}}
+        </div>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-success">Einträge pro Seite</button>
+        <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="?page={{page}}{{#if (filterTrue filter)}}&filter={{filter}}{{/if}}&limit=10">10</a>
+            <a class="dropdown-item" href="?page={{page}}{{#if (filterTrue filter)}}&filter={{filter}}{{/if}}&limit=20">20</a>
+            <a class="dropdown-item" href="?page={{page}}{{#if (filterTrue filter)}}&filter={{filter}}{{/if}}&limit=30">30</a>
         </div>
     </div>
 </nav>
@@ -43,9 +54,9 @@
                 <td>{{Titelnr}}</td>
                 <td>{{Begruendung}}</td>
                 <td>
-                    <a href="/kassenanweisungen/view/{{Id}}?prevPage={{../page}}{{#if ../filterIsTrue}}&prevFilter={{../filter}}{{/if}}" type="button" class="btn btn-small btn-success">Betrachten</a>
-                    <a href="/kassenanweisungen/edit/{{Id}}?prevPage={{../page}}{{#if ../filterIsTrue}}&prevFilter={{../filter}}{{/if}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
-                    <a href="/kassenanweisungen/delete/{{Id}}?prevPage={{../page}}{{#if ../filterIsTrue}}&prevFilter={{../filter}}{{/if}}" type="button" class="btn btn-small btn-danger">Löschen</a>
+                    <a href="/kassenanweisungen/view/{{Id}}?prevPage={{../page}}{{#if (filterTrue ../filter)}}&prevFilter={{../filter}}{{/if}}{{#if (limitTrue ../limit)}}&prevLimit={{../limit}}{{/if}}" type="button" class="btn btn-small btn-success">Betrachten</a>
+                    <a href="/kassenanweisungen/edit/{{Id}}?prevPage={{../page}}{{#if (filterTrue ../filter)}}&prevFilter={{../filter}}{{/if}}{{#if (limitTrue ../limit)}}&prevLimit={{../limit}}{{/if}}" type="button" class="btn btn-small btn-primary">Bearbeiten</a>
+                    <a href="/kassenanweisungen/delete/{{Id}}?prevPage={{../page}}{{#if (filterTrue ../filter)}}&prevFilter={{../filter}}{{/if}}{{#if (limitTrue ../limit)}}&prevLimit={{../limit}}{{/if}}" type="button" class="btn btn-small btn-danger">Löschen</a>
                     <a href="http://{{../host_ip}}:{{../backend_port}}/kassenanweisungen/{{Id}}" target="_blank" rel="noreferrer noopener" type="button" class="btn btn-small btn-secondary">PDF</a>
                 </td>
             </tr>
@@ -55,10 +66,10 @@
     <div class="d-flex abstand paging">
         <ul class="pagination">
             <li class="page-item {{#if firstpage}}disabled{{/if}}">
-                <a class="page-link" href="?page={{prevpage page}}{{#if filterIsTrue}}&filter={{filter}}{{/if}}">Vorherige Seite</a>
+                <a class="page-link" href="?page={{prevpage page}}{{#if (filterTrue filter)}}&filter={{filter}}{{/if}}{{#if (limitTrue limit)}}&limit={{limit}}{{/if}}">Vorherige Seite</a>
             </li>
             <li class="page-item {{#if lastpage}}disabled{{/if}}">
-                <a class="page-link" href="?page={{nextpage page}}{{#if filterIsTrue}}&filter={{filter}}{{/if}}">Nächste Seite</a>
+                <a class="page-link" href="?page={{nextpage page}}{{#if (filterTrue filter)}}&filter={{filter}}{{/if}}{{#if (limitTrue limit)}}&limit={{limit}}{{/if}}">Nächste Seite</a>
             </li>
         </ul>
     </div>

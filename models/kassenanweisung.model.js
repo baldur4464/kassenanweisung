@@ -7,12 +7,11 @@ function viewAllKaWe(req, res) {
   const removed = req.query.removed ? req.query.removed : false
   const limit = req.query.limit ? req.query.limit : 10
   const filter = req.query.filter ? req.query.filter : null
-  let filterIsTrue
   let maxEntries
   let haushaltsjahre
   let sql
   const startIndex = (page - 1) * limit
-  console.log(req.query.filter)
+
 
   if (filter != null) {
     sql =
@@ -25,7 +24,6 @@ function viewAllKaWe(req, res) {
       'SELECT COUNT(*) AS count FROM ' +
       process.env.DB_NAME +
       '.Kassenanweisungen'
-
   }
 
   connection.query(sql, (err, rows) => {
@@ -57,7 +55,6 @@ function viewAllKaWe(req, res) {
       startIndex +
       ',' +
       limit
-    filterIsTrue = true;
   } else {
     sql =
       'SELECT * FROM ' +
@@ -66,7 +63,6 @@ function viewAllKaWe(req, res) {
       startIndex +
       ',' +
       limit
-    filterIsTrue = false;
   }
 
   connection.query(sql, (err, rows) => {
@@ -95,18 +91,18 @@ function viewAllKaWe(req, res) {
       host_ip: hostIP,
       haushaltsjahre: haushaltsjahre,
       maxpage: maxpage,
-      filterIsTrue: filterIsTrue,
       filter: filter,
+      limit: limit,
     })
   })
 }
 
 function viewEditKaWe(req, res) {
-  renderKaWeWith(req.params.id, 'kaweedit', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter })
+  renderKaWeWith(req.params.id, 'kaweedit', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter, PrevLimit: req.query.prevLimit })
 }
 
 async function insertKaWe(req, res) {
-  const {
+  let {
     Haushaltsjahr,
     Titelnr,
     Geldgeber,
@@ -121,10 +117,15 @@ async function insertKaWe(req, res) {
     Zahlungsdatum,
   } = req.body
 
-
+  let rawTitlenr = await neueTitelnr(req.body.Haushaltsjahr)
+  console.log(rawTitlenr);
   let GeldgeberIds = await createInhaberAndGeldanlageIfNotExists(Geldgeber, Geldanlage_Geldgeber)
 
   let GeldempfaengerIds = await createInhaberAndGeldanlageIfNotExists(Geldempfaenger, Geldanlage_Geldempfaenger)
+
+  Titelnr = rawTitlenr[0].maxTitelNr + 1
+
+  console.log(Titelnr)
 
   let sql =
     'INSERT INTO ' +
@@ -144,9 +145,8 @@ async function insertKaWe(req, res) {
       Zahlungsdatum,
     ],
     (err) => {
-      if (err) console.log(err)
-
-      res.redirect('/')
+      if (err) console.log((err))
+      res.redirect('?created=true')
     },
   )
 }
@@ -200,17 +200,18 @@ async function updateKaWe(req, res) {
         console.log(err)
         return
       }
+
       if (req.query.prevFilter != null && req.query.prevFilter != "") {
-        res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&filter=' + req.query.prevFilter + '&edit=true')
+        res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&filter=' + req.query.prevFilter + '&limit=' + req.query.prevLimit + '&edit=true')
       } else {
-        res.redirect('/kaweanzeigen?page=' + req.query.prevPage + '&edit=true')
+        res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&limit=' + req.query.prevLimit+ '&edit=true')
       }
     }
   )
 }
 
 function viewKaWe(req, res) {
-  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter })
+  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter, PrevLimit: req.query.prevLimit})
 }
 
 async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName) {
@@ -234,6 +235,11 @@ async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName
   }
 
   return { InhaberId: inhaberId, GeldanlageId: geldanlageId }
+}
+
+async function neueTitelnr (Haushaltsjahr) {
+  let rows = asyncQuery('SELECT MAX(Titelnr) AS maxTitelNr FROM ' + process.env.DB_NAME + '.Kassenanweisungen WHERE Haushaltsjahr=?', [Haushaltsjahr]).catch(err => {throw err})
+  return rows;
 }
 
 function renderKaWeWith(id, renderFile, res, extraFields) {
