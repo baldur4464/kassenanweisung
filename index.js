@@ -34,6 +34,10 @@ app.get('/', (req, res) => {
   res.render('kassenanweisung')
 });
 
+app.get('/login', (req, res) => {
+  res.render('login')
+})
+
 app.use('/kassenanweisungen', router);
 app.use("/kassenpruefungen", kpRouter);
 

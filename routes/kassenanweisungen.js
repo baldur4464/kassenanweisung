@@ -32,6 +32,10 @@ router.get('/download', (req, res) => {
   pdfservice.kassenanweisungdownload(req, res);
 })
 
+router.get('/login', (req, res) => {
+  res.render('/login')
+})
+
 router.get('*', (req, res) => {
   res.render('404');
 })
