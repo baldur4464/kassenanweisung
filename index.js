@@ -6,6 +6,7 @@ import url from "url";
 import { router } from "./routes/kassenanweisungen.js";
 import helpers from './public/js/helpers.js';
 import { kpRouter } from "./routes/kassenpruefungen.js";
+import {authRouter} from "./routes/authentication.js"
 
 
 dotenv.config();
@@ -34,14 +35,11 @@ app.get('/', (req, res) => {
   res.render('kassenanweisung')
 });
 
-app.get('/login', (req, res) => {
-  res.render('login')
-})
-
+app.use("/auth", authRouter);
 app.use('/kassenanweisungen', router);
 app.use("/kassenpruefungen", kpRouter);
 
 
 app.listen(port, () => {
-  console.log(`The web server has started on port ${port}`);
+  console.log(`The web server has started on http://localhost:${port}`);
 })
