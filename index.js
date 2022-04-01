@@ -27,11 +27,12 @@ app.engine('hbs', exphbs({
   extname: '.hbs',
   helpers: helpers
 }));
+app.use("/public/autocomplete", express.static(path.join(__dirname, "node_modules/@tarekraafat/autocomplete.js/dist")));
 app.use("/public", express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
-  res.render('kassenanweisung')
+  res.render('kassenanweisung', { Haushaltsjahr: "19/20", Titlenr: "1", Inhaber: ["Hallo", "Welt"] })
 });
 
 app.use('/kassenanweisungen', router);

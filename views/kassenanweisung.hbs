@@ -19,17 +19,17 @@ Zahlungsdatum: Textfeld
         <div class="row abstand">
             <div class="col">
                 <label for="haushaltsjahr">Haushaltsjahr(YY/YY): </label>
-                <input type="text" class="form-control " name="Haushaltsjahr" id="haushaltsjahr" value="{{haushaltsjahr}}">
+                <input type="text" class="form-control " name="Haushaltsjahr" id="haushaltsjahr" value="{{Haushaltsjahr}}">
             </div>
             <div class="col">
                 <label for="titelnr">Titelnr: </label>
-                <input type="text" class="form-control" name="Titelnr" id="titelnr" value="{{titelnr}}" disabled>
+                <input type="text" class="form-control" name="Titelnr" id="titelnr" value="{{Titelnr}}" disabled>
             </div>
         </div>
         <div class="row abstand">
             <div class="col">
                 <label for="geldgeber">Geldgeber: </label>
-                <input type="text" class="form-control " name="Geldgeber" id="geldgeber" onchange="{{onChange_Geldgeber}}">
+                <input type="search" class="form-control " name="Geldgeber" id="geldgeber" autocorrect="off" autocomplete="off">
             </div>
             <div class="col">
                 <label for="geldanlage_geldgeber">Geldanlage des Geldgebers: (Barkasse, Konto, ...)</label>
@@ -37,7 +37,7 @@ Zahlungsdatum: Textfeld
             </div>
             <div class="col">
                 <label for="geldempfaenger">Geldempfänger: </label>
-                <input type="text" class="form-control" name="Geldempfaenger" id="geldempfaenger" onchange="{{onChange_Geldempfaenger}}">
+                <input type="text" class="form-control" name="Geldempfaenger" id="geldempfaenger">
             </div>
             <div class="col">
                 <label for="geldanlage_geldempfaenger">Geldanlage des Geldempfängers: </label>
@@ -101,5 +101,62 @@ Zahlungsdatum: Textfeld
 <script type="text/javascript">
     const multiSelect = new IconicMultiSelect({
         select: "#beleg",
+    });
+    multiSelect.init();
+</script>
+<script type="text/javascript">
+    const geldgeberAutocomplete = new autoComplete({
+        placeHolder: "Tippen sie...",
+        selector: "#geldgeber",
+        data: { 
+            src: ["Eins", "Zwei"],
+            cache: true, 
+        },
+        threshold: 2,
+        debounce: 100,
+        resultsList: {
+            class: "autocomplete_results",
+            maxResults: 5,
+        },
+        resultItem: {
+            highlight: true,
+        },
+        events: {
+            input: {
+                /** 
+                    @param {Event} event
+                */
+                selection: (event) => {
+                    const selection = event.detail.selection.value;
+                    geldgeberAutocomplete.input.value = selection;
+                    if (!geldgeberAutocomplete.data.src.includes(event.detail.selection.value)) {
+                        // Füge neuen Inhaber ein, er kann nun gesucht werden.
+                        geldgeberAutocomplete.data.src.push(event.detail.selection.value)
+                    }
+                },
+                /** 
+                    @param {Event} event
+                */
+                results: (event) => {
+                    console.log(JSON.stringify(event.detail))
+                    let matchFound = false
+                    event.detail.matches.forEach((matchObj) => {
+                        let {match} = matchObj
+                        let word = match.replace("<mark>", "");
+                        word = word.replace("</mark>", "");
+                        if (event.detail.query === word) {
+                            console.log("Word: " + word);
+                            matchFound = true
+                        }
+                    })
+                    if (!matchFound) {
+                        let firstMatch = {match: "Neuen Inhaber \""+event.detail.query+"\" erstellen", value: event.detail.query};
+                        event.detail.matches.unshift(firstMatch);
+                        //Immer an erster Stelle den Vorschlag einfügen, die aktuelle Query zu verwenden
+                        event.detail.results.unshift(firstMatch);
+                    }
+                },
+            }
+        }
     });
 </script>

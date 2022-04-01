@@ -1,8 +1,10 @@
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <title>Kassenanweisung</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/public/css/multi-select.css" type="text/css" />
+    <link rel="stylesheet" href="/public/autocomplete/css/autoComplete.css" />
     <link rel="stylesheet" href="/public/css/style.css">
 </head>
 
@@ -11,6 +13,8 @@
     <!-- Header -->
     {{> header}}
     <script src="/public/js/multi-select.js"></script>
+    <!-- autocomplete.js scripts -->
+    <script src="/public/autocomplete/autoComplete.js"></script>
 
     <!-- Body Content will render here -->
     {{{body}}}
@@ -18,6 +22,7 @@
     <!-- Footer -->
     {{> footer}}
 
+    <!-- Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
