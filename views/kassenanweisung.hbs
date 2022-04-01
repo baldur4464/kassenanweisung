@@ -138,7 +138,6 @@ Zahlungsdatum: Textfeld
                     @param {Event} event
                 */
                 results: (event) => {
-                    console.log(JSON.stringify(event.detail))
                     let matchFound = false
                     event.detail.matches.forEach((matchObj) => {
                         let {match} = matchObj
