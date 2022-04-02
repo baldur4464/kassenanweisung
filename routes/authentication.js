@@ -12,4 +12,12 @@ authRouter.post('/login', (req, res) => {
 
 })
 
+authRouter.get('/register', (req, res) => {
+  res.render('register')
+})
+
+authRouter.post('/register', (req, res) => {
+  auth.registerUser(req, res)
+})
+
 export {authRouter}
