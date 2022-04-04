@@ -1,0 +1,69 @@
+<script type="text/javascript">
+    const jsAutoComplete_{{Selector}} = new autoComplete({
+        placeHolder: "Tippen sie...",
+        selector: "#{{Selector}}",
+        data: { 
+            src: async () => {
+				let current_Inhaber = selection_{{Selector_Inhaber}} ? selection_{{Selector_Inhaber}} : "";
+				if (current_Inhaber === "") {
+					return [];
+				}
+				try {
+					console.log("Searching for "+current_Inhaber);
+					const results = await fetch("/inhaber/"+encodeURIComponent(current_Inhaber)+"/geldanlagen");
+					if (results.status === 404) {
+						return [];
+					} 
+					const data = await results.json();
+				return data;
+				} catch (err) {
+					console.error(err);
+					return err;
+				}
+			},
+            cache: false, 
+        },
+        threshold: 2,
+        debounce: 100,
+        resultsList: {
+            class: "autocomplete_results",
+            maxResults: 5,
+        },
+        events: {
+            input: {
+                /** 
+                    @param {Event} event
+                */
+                selection: (event) => {
+                    let selection_{{Selector}} = event.detail.selection.value;
+                    jsAutoComplete_{{Selector}}.input.value = selection_{{Selector}};
+					//Das funktioniert nicht bei Funktionen. Daten müssen beim Server eingetragen werden und src muss durch ein anderes Feld ersetzt werden.
+                    /*if (!jsAutoComplete_{{Selector}}.data.src().includes(selection_{{Selector}})) {
+                        // Füge neuen Inhaber ein, er kann nun gesucht werden. 
+                        jsAutoComplete_{{Selector}}.data.src.push(seletion_{{Selector}})
+                    }*/
+                },
+                /** 
+                    @param {Event} event
+                */
+                results: (event) => {
+                    let matchFound = false
+                    event.detail.matches.forEach((matchObj) => {
+                        let {match} = matchObj
+                        let word = match.replace("<mark>", "");
+                        word = word.replace("</mark>", "");
+                        if (event.detail.query === word) {
+                            matchFound = true
+                        }
+                    })
+                    if (!matchFound) {
+                        let firstMatch = {match: "Neuen Inhaber \""+event.detail.query+"\" erstellen", value: event.detail.query};
+                        event.detail.matches.unshift(firstMatch);
+                        //Immer an erster Stelle den Vorschlag einfügen, die aktuelle Query zu verwenden
+                        event.detail.results.unshift(firstMatch);
+                    }
+                }
+            }
+        }
+    });
+</script>

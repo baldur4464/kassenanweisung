@@ -1,0 +1,52 @@
+<script type="text/javascript">
+    var selection_{{Selector}};
+    const jsAutoComplete_{{Selector}} = new autoComplete({
+        placeHolder: "Tippen sie...",
+        selector: "#{{Selector}}",
+        data: { 
+            src: {{{Data}}},
+            cache: true, 
+        },
+        threshold: 2,
+        debounce: 100,
+        resultsList: {
+            class: "autocomplete_results",
+            maxResults: 5,
+        },
+        events: {
+            input: {
+                /** 
+                    @param {Event} event
+                */
+                selection: (event) => {
+                    selection_{{Selector}} = event.detail.selection.value;
+                    jsAutoComplete_{{Selector}}.input.value = selection_{{Selector}};
+                    if (!jsAutoComplete_{{Selector}}.data.src.includes(selection_{{Selector}})) {
+                        // Füge neuen Inhaber ein, er kann nun gesucht werden.
+                        jsAutoComplete_{{Selector}}.data.src.push(seletion_{{Selector}})
+                    }
+                },
+                /** 
+                    @param {Event} event
+                */
+                results: (event) => {
+                    let matchFound = false
+                    event.detail.matches.forEach((matchObj) => {
+                        let {match} = matchObj
+                        let word = match.replace("<mark>", "");
+                        word = word.replace("</mark>", "");
+                        if (event.detail.query === word) {
+                            matchFound = true
+                        }
+                    })
+                    if (!matchFound) {
+                        let firstMatch = {match: "Neuen Inhaber \""+event.detail.query+"\" erstellen", value: event.detail.query};
+                        event.detail.matches.unshift(firstMatch);
+                        //Immer an erster Stelle den Vorschlag einfügen, die aktuelle Query zu verwenden
+                        event.detail.results.unshift(firstMatch);
+                    }
+                },
+            }
+        }
+    });
+</script>

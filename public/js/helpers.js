@@ -1,5 +1,6 @@
 import moment from "moment";
 import autoComplete from "@tarekraafat/autocomplete.js";
+import { getAllInhaber } from "../../models/inhaber.model.js";
 
 export default {
   formatdate: function(date) {
@@ -29,38 +30,5 @@ export default {
       console.log("filter is false")
       return false
     }
-  },
-  /**
-   * 
-   * @param {string} name 
-   */
-  autocomplete: function(name) {
-    return `
-    const autoCompleteJS_` + name + ` = new autoComplete({
-      placeHolder: "Tippen sie...",
-        selector: "#` + name.toLowerCase() + `",
-        data: { 
-            src: ["Eins", "Zwei"],
-            cache: true, 
-        },
-        threshold: 2,
-        debounce: 100,
-        resultsList: {
-            class: "autocomplete_results",
-            maxResults: 5,
-        },
-        resultItem: {
-            highlight: true,
-        },
-        events: {
-            input: {
-                selection: (event) => {
-                    const selection = event.detail.selection.value;
-                    autoCompleteJS_` + name + `.input.value = selection;
-                }
-            }
-        }
-    });
-    `
   }
 };

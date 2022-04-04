@@ -32,12 +32,12 @@ Zahlungsdatum: Textfeld
                 <input type="search" class="form-control " name="Geldgeber" id="geldgeber" autocorrect="off" autocomplete="off">
             </div>
             <div class="col">
-                <label for="geldanlage_geldgeber">Geldanlage des Geldgebers: (Barkasse, Konto, ...)</label>
+                <label for="geldanlage_geldgeber">Geldanlage des Geldgebers:</label>
                 <input type="text" class="form-control " name="Geldanlage_Geldgeber" id="geldanlage_geldgeber">
             </div>
             <div class="col">
                 <label for="geldempfaenger">Geldempfänger: </label>
-                <input type="text" class="form-control" name="Geldempfaenger" id="geldempfaenger">
+                <input type="text" class="form-control" name="Geldempfaenger" id="geldempfaenger" autocorrect="off" autocomplete="off">
             </div>
             <div class="col">
                 <label for="geldanlage_geldempfaenger">Geldanlage des Geldempfängers: </label>
@@ -104,58 +104,7 @@ Zahlungsdatum: Textfeld
     });
     multiSelect.init();
 </script>
-<script type="text/javascript">
-    const geldgeberAutocomplete = new autoComplete({
-        placeHolder: "Tippen sie...",
-        selector: "#geldgeber",
-        data: { 
-            src: ["Eins", "Zwei"],
-            cache: true, 
-        },
-        threshold: 2,
-        debounce: 100,
-        resultsList: {
-            class: "autocomplete_results",
-            maxResults: 5,
-        },
-        resultItem: {
-            highlight: true,
-        },
-        events: {
-            input: {
-                /** 
-                    @param {Event} event
-                */
-                selection: (event) => {
-                    const selection = event.detail.selection.value;
-                    geldgeberAutocomplete.input.value = selection;
-                    if (!geldgeberAutocomplete.data.src.includes(event.detail.selection.value)) {
-                        // Füge neuen Inhaber ein, er kann nun gesucht werden.
-                        geldgeberAutocomplete.data.src.push(event.detail.selection.value)
-                    }
-                },
-                /** 
-                    @param {Event} event
-                */
-                results: (event) => {
-                    let matchFound = false
-                    event.detail.matches.forEach((matchObj) => {
-                        let {match} = matchObj
-                        let word = match.replace("<mark>", "");
-                        word = word.replace("</mark>", "");
-                        if (event.detail.query === word) {
-                            console.log("Word: " + word);
-                            matchFound = true
-                        }
-                    })
-                    if (!matchFound) {
-                        let firstMatch = {match: "Neuen Inhaber \""+event.detail.query+"\" erstellen", value: event.detail.query};
-                        event.detail.matches.unshift(firstMatch);
-                        //Immer an erster Stelle den Vorschlag einfügen, die aktuelle Query zu verwenden
-                        event.detail.results.unshift(firstMatch);
-                    }
-                },
-            }
-        }
-    });
-</script>
+{{> autocomplete_inhaber Selector="geldgeber" Data=Inhaber}}
+{{> autocomplete_inhaber Selector="geldempfaenger" Data=Inhaber}}
+{{> autocomplete_geldgeber Selector="geldanlage_geldgeber" Selector_Inhaber="geldgeber"}}
+{{> autocomplete_geldgeber Selector="geldanlage_geldempfaenger" Selector_Inhaber="geldempfaenger"}}
