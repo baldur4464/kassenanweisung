@@ -3,13 +3,16 @@
         placeHolder: "Tippen sie...",
         selector: "#{{Selector}}",
         data: { 
+			/**
+			*
+			* @return {string[]}
+			*/
             src: async () => {
 				let current_Inhaber = selection_{{Selector_Inhaber}} ? selection_{{Selector_Inhaber}} : "";
 				if (current_Inhaber === "") {
 					return [];
 				}
 				try {
-					console.log("Searching for "+current_Inhaber);
 					const results = await fetch("/inhaber/"+encodeURIComponent(current_Inhaber)+"/geldanlagen");
 					if (results.status === 404) {
 						return [];
@@ -21,9 +24,9 @@
 					return err;
 				}
 			},
+			keys: ["Name"],
             cache: false, 
         },
-        threshold: 2,
         debounce: 100,
         resultsList: {
             class: "autocomplete_results",
@@ -34,14 +37,32 @@
                 /** 
                     @param {Event} event
                 */
-                selection: (event) => {
+                selection: async (event) => {
+					if (!selection_{{Selector_Inhaber}}) {
+						jsAutoComplete_{{Selector}}.input.value = "Erst Inhaber auswählen";
+						return
+					}
                     let selection_{{Selector}} = event.detail.selection.value;
-                    jsAutoComplete_{{Selector}}.input.value = selection_{{Selector}};
-					//Das funktioniert nicht bei Funktionen. Daten müssen beim Server eingetragen werden und src muss durch ein anderes Feld ersetzt werden.
-                    /*if (!jsAutoComplete_{{Selector}}.data.src().includes(selection_{{Selector}})) {
+                    jsAutoComplete_{{Selector}}.input.value = selection_{{Selector}}[jsAutoComplete_{{Selector}}.data.keys[0]];
+
+					const storeObj = jsAutoComplete_{{Selector}}.data.store
+					let values = [];
+					storeObj.forEach((obj) => {
+						values.push(obj.Name);
+					});
+					
+					if (!values.includes(selection_{{Selector}}[jsAutoComplete_{{Selector}}.data.keys[0]])) {
                         // Füge neuen Inhaber ein, er kann nun gesucht werden. 
-                        jsAutoComplete_{{Selector}}.data.src.push(seletion_{{Selector}})
-                    }*/
+                        const bd = {
+                            Name: selection_{{Selector}},
+                        }
+                        // Füge neuen Inhaber ein, er kann nun gesucht werden.
+                        let res = await fetch("/inhaber/"+encodeURIComponent(selection_{{Selector_Inhaber}})+"/geldanlagen", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(bd),
+                        });
+                    }
                 },
                 /** 
                     @param {Event} event
@@ -57,7 +78,7 @@
                         }
                     })
                     if (!matchFound) {
-                        let firstMatch = {match: "Neuen Inhaber \""+event.detail.query+"\" erstellen", value: event.detail.query};
+                        let firstMatch = {match: "Neue Geldanlage \""+event.detail.query+"\" erstellen", value: event.detail.query};
                         event.detail.matches.unshift(firstMatch);
                         //Immer an erster Stelle den Vorschlag einfügen, die aktuelle Query zu verwenden
                         event.detail.results.unshift(firstMatch);

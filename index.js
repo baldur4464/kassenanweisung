@@ -8,6 +8,7 @@ import helpers from './public/js/helpers.js';
 import { kpRouter } from "./routes/kassenpruefungen.js";
 import { getAllInhaber } from "./models/inhaber.model.js";
 import { getGeldanlagenForInhaber } from "./models/geldanlage.model.js";
+import { inhRouter } from "./routes/inhaber.js";
 
 
 dotenv.config();
@@ -33,15 +34,6 @@ app.use("/public/autocomplete", express.static(path.join(__dirname, "node_module
 app.use("/public", express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'hbs');
 
-app.get("/inhaber/:inhaber/geldanlagen", async(req, res) => {
-  console.log("Got request to search for " + req.params.inhaber);
-  let geldanlagen = await getGeldanlagenForInhaber(req.params.inhaber);
-  let geldanlage_Arr = [];
-  geldanlagen.map(({ Id, Name, Inhaber }) => {
-    geldanlage_Arr.push(Name)
-  })
-  res.json(geldanlage_Arr);
-});
 app.get('/', async(req, res) => {
   let inhaber_model = await getAllInhaber()
   let inhaber_Arr = []
@@ -49,9 +41,10 @@ app.get('/', async(req, res) => {
     inhaber_Arr.push(Name)
   });
 
-  res.render('kassenanweisung', { Haushaltsjahr: "19/20", Titlenr: "1", Inhaber: JSON.stringify(inhaber_Arr), ServerAddress: req.socket.remoteAddress.slice(req.socket.remoteAddress.lastIndexOf(":") + 1) + ":" + process.env.PORT })
+  res.render('kassenanweisung', { Haushaltsjahr: "19/20", Titlenr: "1", Inhaber: JSON.stringify(inhaber_Arr) })
 });
 
+app.use("/inhaber", inhRouter);
 app.use('/kassenanweisungen', router);
 app.use("/kassenpruefungen", kpRouter);
 

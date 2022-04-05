@@ -18,12 +18,20 @@
                 /** 
                     @param {Event} event
                 */
-                selection: (event) => {
+                selection: async (event) => {
                     selection_{{Selector}} = event.detail.selection.value;
                     jsAutoComplete_{{Selector}}.input.value = selection_{{Selector}};
                     if (!jsAutoComplete_{{Selector}}.data.src.includes(selection_{{Selector}})) {
+                        const bd = {
+                            Name: selection_{{Selector}},
+                        }
                         // Füge neuen Inhaber ein, er kann nun gesucht werden.
-                        jsAutoComplete_{{Selector}}.data.src.push(seletion_{{Selector}})
+                        let res = await fetch("/inhaber/", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(bd),
+                        });
+                        jsAutoComplete_{{Selector}}.data.src.push(selection_{{Selector}});
                     }
                 },
                 /** 
