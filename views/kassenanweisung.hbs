@@ -19,29 +19,29 @@ Zahlungsdatum: Textfeld
         <div class="row abstand">
             <div class="col">
                 <label for="haushaltsjahr">Haushaltsjahr(YY/YY): </label>
-                <input type="text" class="form-control " name="Haushaltsjahr" id="haushaltsjahr" value="{{haushaltsjahr}}">
+                <input type="text" class="form-control " name="Haushaltsjahr" id="haushaltsjahr" value="{{Haushaltsjahr}}">
             </div>
             <div class="col">
                 <label for="titelnr">Titelnr: </label>
-                <input type="text" class="form-control" name="Titelnr" id="titelnr" value="{{titelnr}}" disabled>
+                <input type="text" class="form-control" name="Titelnr" id="titelnr" value="{{Titelnr}}" disabled>
             </div>
         </div>
         <div class="row abstand">
             <div class="col">
                 <label for="geldgeber">Geldgeber: </label>
-                <input type="text" class="form-control " name="Geldgeber" id="geldgeber" onchange="{{onChange_Geldgeber}}">
+                <input type="search" class="form-control " name="Geldgeber" id="geldgeber" autocorrect="off" autocomplete="off">
             </div>
             <div class="col">
-                <label for="geldanlage_geldgeber">Geldanlage des Geldgebers: (Barkasse, Konto, ...)</label>
-                <input type="text" class="form-control " name="Geldanlage_Geldgeber" id="geldanlage_geldgeber">
+                <label for="geldanlage_geldgeber">Geldanlage des Geldgebers:</label>
+                <input type="text" class="form-control " name="Geldanlage_Geldgeber" id="geldanlage_geldgeber" autocorrect="off" autocomplete="off">
             </div>
             <div class="col">
                 <label for="geldempfaenger">Geldempfänger: </label>
-                <input type="text" class="form-control" name="Geldempfaenger" id="geldempfaenger" onchange="{{onChange_Geldempfaenger}}">
+                <input type="text" class="form-control" name="Geldempfaenger" id="geldempfaenger" autocorrect="off" autocomplete="off">
             </div>
             <div class="col">
                 <label for="geldanlage_geldempfaenger">Geldanlage des Geldempfängers: </label>
-                <input type="text" class="form-control" name="Geldanlage_Geldempfaenger" id="geldanlage_geldempfaenger">
+                <input type="text" class="form-control" name="Geldanlage_Geldempfaenger" id="geldanlage_geldempfaenger" autocorrect="off" autocomplete="off">
             </div>
         </div>
         <div class="row abstand">
@@ -55,7 +55,7 @@ Zahlungsdatum: Textfeld
                     <option value="Überweisung">Überweisung</option>
                     <option value="Bargeldeinzahlung">Bargeldeinzahlung</option>
                     <option value="Bargeldauszahlung">Bargeldauszahlung</option>
-                    <option value="Münzgeldeinzahlung">Münzgeldeinzahlung</option>
+                    <option value="Kontoeinzahlung">Kontoeinzahlung</option>
                     <option value="Scheckeinreichung">Scheckeinreichung</option>
                     <option value="Tresoreinzahlung">Tresoreinzahlung</option>
                 </select>
@@ -91,7 +91,7 @@ Zahlungsdatum: Textfeld
         </div>
         <div class="row abstand">
             <div class="col">
-                <input type="submit" class="btn btn-success" value="Absenden">
+                <input type="submit" class="btn btn-success" value="Absenden" >
                 <input type="reset" class="btn btn-danger" value="Verwerfen">
             </div>
         </div>
@@ -102,4 +102,97 @@ Zahlungsdatum: Textfeld
     const multiSelect = new IconicMultiSelect({
         select: "#beleg",
     });
+    multiSelect.init();
+</script>
+{{> autocomplete_inhaber Selector="geldgeber" Data=Inhaber}}
+{{> autocomplete_inhaber Selector="geldempfaenger" Data=Inhaber}}
+{{> autocomplete_geldgeber Selector="geldanlage_geldgeber" Selector_Inhaber="geldgeber"}}
+{{> autocomplete_geldgeber Selector="geldanlage_geldempfaenger" Selector_Inhaber="geldempfaenger"}}
+<!-- Script for adding smart selection to Zahlungsart -->
+<script type="text/javascript">
+    const geldgeber = document.getElementById("geldgeber");
+    const geldempfaenger = document.getElementById("geldempfaenger");
+    
+    function selectZahlungsartAndBeleg(){
+        if (!jsAutoComplete_geldanlage_geldgeber.data.store || !jsAutoComplete_geldanlage_geldempfaenger.data.store ) {
+            return
+        }
+
+        const zahlungsart = document.getElementById("Zahlungsart");
+        
+        /**
+        * @const
+        * @type { {Name: string, Konto: boolean, Id: number} }
+        */
+        const geldanlage_geldgeber = jsAutoComplete_geldanlage_geldgeber.data.store.find((obj) => jsAutoComplete_geldanlage_geldgeber.input.value === obj.Name);
+        
+        /**
+        * @const
+        * @type { {Name: string, Konto: boolean, Id: number} }
+        */
+        const geldanlage_geldempfaenger = jsAutoComplete_geldanlage_geldempfaenger.data.store.find((obj) => jsAutoComplete_geldanlage_geldempfaenger.input.value === obj.Name);
+
+        if ( !geldanlage_geldgeber || !geldanlage_geldempfaenger || !geldgeber.value || !geldempfaenger.value ) {
+            return
+        }
+
+        // Adjust Zahlungsart
+        if (geldempfaenger.value === "Fachschaft ET") {
+            // Wir bekommen Geld. In bar oder per Überweisung?
+            if (geldanlage_geldempfaenger.Konto) {
+                //Zahlen wir selbst vom Tresor ein?
+                if (geldgeber.value === "Fachschaft ET" && geldanlage_geldgeber.Name === "Safe FSET") {
+                    // Bargeldeinzahlung ist das Einzahlen vom Tresor auf das Konto
+                    zahlungsart.value = "Kontoeinzahlung";
+                } else if (geldgeber.value !== "Fachschaft ET" ) {
+                    zahlungsart.value ="Überweisung";
+                }
+            } else {
+                // In welche Barkasse geht das Geld?
+                if (geldanlage_geldempfaenger.Name === "Safe FSET") {
+                    zahlungsart.value ="Tresoreinzahlung";
+                } else {
+                    zahlungsart.value ="Bargeldeinzahlung";
+                }
+            }
+        } else if (geldgeber.value === "Fachschaft ET") {
+            if (geldanlage_geldgeber.Konto) {
+                zahlungsart.value ="Überweisung";
+            } else {
+                if (geldempfaenger.value !== "Fachschaft ET") {
+                    zahlungsart.value = "Bargeldauszahlung";
+                }
+            }
+        }
+
+
+        // Adjust Beleg
+        const optionUl = multiSelect._multiselect.querySelector(".multiselect__options ul");
+        const optionsHtml = Array.from(optionUl.children);
+        if (geldanlage_geldgeber.Konto && geldanlage_geldempfaenger.Konto) {
+            optionsHtml.forEach((listItem) => {
+                if (listItem.innerText === "Überweisungsbeleg" || listItem.innerText === "Rechnung") {
+                    if (!multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText) {
+                        multiSelect._handleOption(listItem);
+                    }
+                }
+            });
+        } else if (!geldanlage_geldgeber.Konto && !geldanlage_geldempfaenger.Konto) {
+            optionsHtml.forEach((listItem) => {
+                if (listItem.innerText === "Quittung" || listItem.innerText === "Rechnung") {
+                    if (!multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText) {
+                        multiSelect._handleOption(listItem);
+                    }
+                }
+            });
+        }
+    }
+
+    geldgeber.addEventListener("focusout", selectZahlungsartAndBeleg);
+    geldempfaenger.addEventListener("focusout", selectZahlungsartAndBeleg);
+    const geldanlage_geldgeber_html = document.getElementById("geldanlage_geldgeber");
+    geldanlage_geldgeber_html.addEventListener("focusout", selectZahlungsartAndBeleg);
+    const geldanlage_geldempfaenger_html = document.getElementById("geldanlage_geldempfaenger");
+    geldanlage_geldempfaenger_html.addEventListener("focusout", selectZahlungsartAndBeleg);
+
 </script>

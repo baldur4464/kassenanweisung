@@ -6,6 +6,9 @@ import url from "url";
 import { router } from "./routes/kassenanweisungen.js";
 import helpers from './public/js/helpers.js';
 import { kpRouter } from "./routes/kassenpruefungen.js";
+import { getAllInhaber } from "./models/inhaber.model.js";
+import { getGeldanlagenForInhaber } from "./models/geldanlage.model.js";
+import { inhRouter } from "./routes/inhaber.js";
 
 
 dotenv.config();
@@ -27,13 +30,21 @@ app.engine('hbs', exphbs({
   extname: '.hbs',
   helpers: helpers
 }));
+app.use("/public/autocomplete", express.static(path.join(__dirname, "node_modules/@tarekraafat/autocomplete.js/dist")));
 app.use("/public", express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'hbs');
 
-app.get('/', (req, res) => {
-  res.render('kassenanweisung')
+app.get('/', async(req, res) => {
+  let inhaber_model = await getAllInhaber()
+  let inhaber_Arr = []
+  inhaber_model.map(({ Id, Name }) => {
+    inhaber_Arr.push(Name)
+  });
+
+  res.render('kassenanweisung', { Haushaltsjahr: "19/20", Titlenr: "1", Inhaber: JSON.stringify(inhaber_Arr) })
 });
 
+app.use("/inhaber", inhRouter);
 app.use('/kassenanweisungen', router);
 app.use("/kassenpruefungen", kpRouter);
 

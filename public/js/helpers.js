@@ -1,5 +1,4 @@
 import moment from "moment";
-import connection from "../../models/db.js"
 
 export default {
   formatdate: function(date) {
