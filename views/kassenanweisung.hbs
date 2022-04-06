@@ -137,14 +137,6 @@ Zahlungsdatum: Textfeld
         }
 
         // Adjust Zahlungsart
-        const children = zahlungsart.children;
-        let valueArr = [];
-        for (let i=0; i<children.length; i++) {
-            let child = children.item(i);
-            valueArr.push(child.value);
-        }
-
-        let index
         if (geldempfaenger.value === "Fachschaft ET") {
             // Wir bekommen Geld. In bar oder per Überweisung?
             if (geldanlage_geldempfaenger.Konto) {
@@ -180,13 +172,17 @@ Zahlungsdatum: Textfeld
         if (geldanlage_geldgeber.Konto && geldanlage_geldempfaenger.Konto) {
             optionsHtml.forEach((listItem) => {
                 if (listItem.innerText === "Überweisungsbeleg" || listItem.innerText === "Rechnung") {
-                    multiSelect._handleOption(listItem);
+                    if (!multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText) {
+                        multiSelect._handleOption(listItem);
+                    }
                 }
             });
         } else if (!geldanlage_geldgeber.Konto && !geldanlage_geldempfaenger.Konto) {
             optionsHtml.forEach((listItem) => {
                 if (listItem.innerText === "Quittung" || listItem.innerText === "Rechnung") {
-                    multiSelect._handleOption(listItem);
+                    if (!multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText) {
+                        multiSelect._handleOption(listItem);
+                    }
                 }
             });
         }
