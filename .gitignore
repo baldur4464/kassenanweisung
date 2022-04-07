@@ -105,3 +105,6 @@ dist
 
 # Idea profil directories
 .idea/
+
+#Sonstiges
+package-lock.json
