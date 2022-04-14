@@ -7,11 +7,20 @@
   justify-content: center;
 }
 
+.autoComplete_wrapper {}
+
 .autoComplete_wrapper>input {
   height: calc(1.5em + .75rem + 2px);
   width: 100%;
   background-size: 1rem;
   background-position: left 0.9rem top 0.7rem;
+  border-color: #ced4da;
+  border-radius: 0.25rem;
+  color: #495057;
+}
+
+.autoComplete_wrapper>input::placeholder {
+  color: lightgray;
 }
 
 .autoComplete_wrapper>.autocomplete_results {
