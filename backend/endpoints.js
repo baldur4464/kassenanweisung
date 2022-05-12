@@ -2,7 +2,7 @@ import fetch from "node-fetch"
 
 export async function GetKassenpruefungen() {
   let path = "/kassenpruefungen/";
-  let obj = await sendGetRequest(path)
+  let obj = await sendGetRequestJSON(path)
   if (obj === undefined) {
     return obj
   }
@@ -21,7 +21,7 @@ export async function GetKassenpruefungen() {
 
 export async function GetKassenpruefung(id) {
   let path = "/kassenpruefungen/" + id;
-  let obj = await sendGetRequest(path)
+  let obj = await sendGetRequestJSON(path)
   if (obj === undefined) {
     return obj;
   }
@@ -32,9 +32,21 @@ export async function GetKassenpruefung(id) {
   }
 }
 
+/**
+ * GetKassenpruefungPDF requests a PDF File for the ID from the backend and sends the file to the user
+ * 
+ * @param {number} id 
+ * @returns {Blob | undefined} A PDF Form containing the information or undefined if nothing was sent
+ */
+export async function GetKassenpruefungPDF(id) {
+  let path = "/kassenpruefungen/"+id;
+  let obj = await sendGetRequestPDF(path)
+  return obj
+}
+
 export async function GetAllInhabers() {
   let path = "/inhaber/";
-  let obj = sendGetRequest(path)
+  let obj = sendGetRequestJSON(path)
   if (obj === undefined) {
     return obj
   }
@@ -50,11 +62,11 @@ export async function GetAllInhabers() {
 }
 
 export async function UpdateKassenpruefung(kp) {
-  let res = await sendPostOrPut("/kassenpruefungen/" + kp.Id, kp, "PUT");
+  let res = await sendPostOrPutJSON("/kassenpruefungen/" + kp.Id, kp, "PUT");
   return res
 }
 
-async function sendGetRequest(path) {
+async function sendGetRequestJSON(path) {
   let url = "http://" + process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
   try {
     const response = await fetch(url, {
@@ -73,7 +85,7 @@ async function sendGetRequest(path) {
   return undefined;
 }
 
-async function sendPostOrPut(path, jsonObject, method) {
+async function sendPostOrPutJSON(path, jsonObject, method) {
   let url = "http://" + process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
   try {
     const response = await fetch(url, {
@@ -89,4 +101,23 @@ async function sendPostOrPut(path, jsonObject, method) {
     console.log(e);
   }
   return 400;
+}
+
+async function sendGetRequestPDF(path) {
+  let url = "http://" + process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        'Accept': "application/pdf"
+      },
+    });
+    if (response.status !== 200) {
+      console.log("Error: Status was not 200 but " + response.status);
+    }
+    return await response.blob();
+  } catch (e) {
+    console.log(e);
+  }
+  return undefined;
 }
