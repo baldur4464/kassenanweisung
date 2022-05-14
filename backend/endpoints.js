@@ -104,7 +104,7 @@ async function sendPostOrPutJSON(path, jsonObject, method) {
 }
 
 async function sendGetRequestPDF(path) {
-  let url = process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  let url = "http://"+process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
   try {
     const response = await fetch(url, {
       method: "GET",
