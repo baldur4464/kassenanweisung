@@ -104,7 +104,7 @@ async function sendPostOrPutJSON(path, jsonObject, method) {
 }
 
 async function sendGetRequestPDF(path) {
-  let url = "http://" + process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  let url = process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -115,7 +115,11 @@ async function sendGetRequestPDF(path) {
     if (response.status !== 200) {
       console.log("Error: Status was not 200 but " + response.status);
     }
-    return await response.blob();
+    console.log("Response has the following header: "+response.headers);
+    blob = await response.blob();
+    if (blob === undefined) {
+      console.log("Could not extract blob. Body is: "+response.body);
+    }
   } catch (e) {
     console.log(e);
   }
