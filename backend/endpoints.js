@@ -1,4 +1,5 @@
 import fetch from "node-fetch"
+import {Blob} from "buffer"
 
 export async function GetKassenpruefungen() {
   let path = "/kassenpruefungen/";
@@ -116,10 +117,8 @@ async function sendGetRequestPDF(path) {
       console.log("Error: Status was not 200 but " + response.status);
     }
     console.log("Response has the following header: "+JSON.stringify(response.headers));
+    console.log("Could not extract blob. Body is: "+JSON.stringify(response.body));
     blob = await response.blob();
-    if (blob === undefined) {
-      console.log("Could not extract blob. Body is: "+JSON.stringify(response.body));
-    }
   } catch (e) {
     console.log(e);
   }
