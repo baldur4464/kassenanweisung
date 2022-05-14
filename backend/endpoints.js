@@ -38,8 +38,8 @@ export async function GetKassenpruefung(id) {
  * @param {number} id 
  * @returns {Blob | undefined} A PDF Form containing the information or undefined if nothing was sent
  */
-export async function GetKassenpruefungPDF(id) {
-  let path = "/kassenpruefungen/"+id;
+export async function GetKassenanweisungPDF(id) {
+  let path = "/kassenanweisungen/"+id;
   let obj = await sendGetRequestPDF(path)
   return obj
 }
