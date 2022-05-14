@@ -115,10 +115,10 @@ async function sendGetRequestPDF(path) {
     if (response.status !== 200) {
       console.log("Error: Status was not 200 but " + response.status);
     }
-    console.log("Response has the following header: "+json.stringify(response.headers));
+    console.log("Response has the following header: "+JSON.stringify(response.headers));
     blob = await response.blob();
     if (blob === undefined) {
-      console.log("Could not extract blob. Body is: "+json.stringify(response.body));
+      console.log("Could not extract blob. Body is: "+JSON.stringify(response.body));
     }
   } catch (e) {
     console.log(e);
