@@ -1,5 +1,4 @@
 import fetch from "node-fetch"
-import {Blob} from "buffer"
 
 export async function GetKassenpruefungen() {
   let path = "/kassenpruefungen/";
@@ -34,14 +33,15 @@ export async function GetKassenpruefung(id) {
 }
 
 /**
- * GetKassenpruefungPDF requests a PDF File for the ID from the backend and sends the file to the user
+ * GetKassenanweisungPDF requests a PDF File with a filled out form for the ID from the backend and sends the file to the user.
  * 
  * @param {number} id 
- * @returns {Blob | undefined} A PDF Form containing the information or undefined if nothing was sent
+ * @returns {ArrayBuffer} A PDF Form containing the information or undefined if nothing was sent
  */
 export async function GetKassenanweisungPDF(id) {
   let path = "/kassenanweisungen/"+id;
   let obj = await sendGetRequestPDF(path)
+  // convert to file?
   return obj
 }
 
@@ -116,9 +116,11 @@ async function sendGetRequestPDF(path) {
     if (response.status !== 200) {
       console.log("Error: Status was not 200 but " + response.status);
     }
-    console.log("Response has the following header: "+JSON.stringify(response.headers));
-    console.log("Could not extract blob. Body is: "+JSON.stringify(response.body));
-    blob = await response.blob();
+    let content = await response.arrayBuffer()
+    if (content === undefined) {
+      console.log("Error: Should get buffer object.")
+    }
+    return content
   } catch (e) {
     console.log(e);
   }
