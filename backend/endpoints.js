@@ -117,13 +117,24 @@ async function sendGetRequestPDF(path) {
     if (response.status !== 200) {
       console.log("Error: Status was not 200 but " + response.status);
     }
-    let content = await response.arrayBuffer()
-    if (content === undefined) {
-      console.log("Error: Should get buffer object.")
-    }
-    return content
+    console.log(await readAllChunks(response.body))
+    return {}
   } catch (e) {
     console.log(e);
   }
   return undefined;
+}
+
+async function readAllChunks(readableStream) {
+  const reader = readableStream.getReader();
+  const chunks = [];
+  
+  let done, value;
+  while (!done) {
+    ({ value, done } = await reader.read());
+    if (done) {
+      return chunks;
+    }
+    chunks.push(value);
+  }
 }
