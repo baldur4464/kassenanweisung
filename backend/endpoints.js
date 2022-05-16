@@ -1,4 +1,5 @@
 import fetch from "node-fetch"
+import {Blob} from "buffer"
 
 
 export async function GetKassenpruefungen() {
@@ -37,7 +38,7 @@ export async function GetKassenpruefung(id) {
  * GetKassenanweisungPDF requests a PDF File with a filled out form for the ID from the backend and sends the file to the user.
  * 
  * @param {number} id 
- * @returns {ArrayBuffer} A PDF Form containing the information or undefined if nothing was sent
+ * @returns {Blob} A PDF Form containing the information or undefined if nothing was sent
  */
 export async function GetKassenanweisungPDF(id) {
   let path = "/kassenanweisungen/"+id;
@@ -117,8 +118,8 @@ async function sendGetRequestPDF(path) {
     if (response.status !== 200) {
       console.log("Error: Status was not 200 but " + response.status);
     }
-    console.log(await readAllChunks(response.body))
-    return {}
+    let obj = await response.blob()
+    return obj
   } catch (e) {
     console.log(e);
   }
