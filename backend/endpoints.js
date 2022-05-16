@@ -1,5 +1,6 @@
 import fetch from "node-fetch"
 
+
 export async function GetKassenpruefungen() {
   let path = "/kassenpruefungen/";
   let obj = await sendGetRequestJSON(path)

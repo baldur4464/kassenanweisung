@@ -2,6 +2,7 @@ import express from "express";
 import { GetKassenanweisungPDF as GetKassenanweisungPDF } from "../backend/endpoints.js";
 import * as model from "../models/kassenanweisung.model.js";
 import * as pdfservice from "../services/KassenanweisungPDF.js";
+import {Blob} from "buffer"
 
 const router = express.Router();
 
@@ -34,11 +35,9 @@ router.get('/download', (req, res) => {
 })
 
 router.get('/pdf/:id', (req, res) => {
-  blob = GetKassenanweisungPDF(req.params.id)
-  res.type = blob.type
-  blob.arrayBuffer().then((buf) => {
-    res.send(Buffer.from(buf))
-  });
+  buffer = GetKassenanweisungPDF(req.params.id)
+  res.format("application/pdf")
+  res.send(buffer)
 })
 
 router.get('*', (req, res) => {
