@@ -35,8 +35,9 @@ router.get('/download', (req, res) => {
 })
 
 router.get('/pdf/:id', (req, res) => {
-  buffer = GetKassenanweisungPDF(req.params.id)
+  let buffer = GetKassenanweisungPDF(req.params.id)
   res.format("application/pdf")
+  console.log("Sending content: "+JSON.stringify(buffer))
   res.send(buffer)
 })
 
