@@ -119,8 +119,7 @@ async function sendGetRequestPDF(path) {
       console.log("Error: Status was not 200 but " + response.status);
     }
     const obj = await response.blob()
-    const pdfData = await obj.arrayBuffer()
-    return pdfData
+    return obj
   } catch (e) {
     console.log(e);
   }
