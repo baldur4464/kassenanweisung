@@ -25,6 +25,14 @@
           <li><a class="dropdown-item" href="/kassenpruefungen/create">erstellen</a></li>
         </ul>
       </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="/jahresabschluss">Jahresabschluss</a>
+        <ul class="dropdown-menu fade-up">
+        {{#each Header_HHJ}}
+          <li><a class="dropdown-item" href="{{createJahresabschlussPath .}}">{{.}}</a></li>
+        {{/each}}
+        </ul>
+      </li>
     </ul>
   </div>
 </nav>

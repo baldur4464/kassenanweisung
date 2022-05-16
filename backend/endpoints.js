@@ -38,7 +38,7 @@ export async function GetKassenpruefung(id) {
  * GetKassenanweisungPDF requests a PDF File with a filled out form for the ID from the backend and sends the file to the user.
  * 
  * @param {number} id 
- * @returns {Blob} A PDF Form containing the information or undefined if nothing was sent
+ * @returns {globalThis.Blob} A PDF Form containing the information or undefined if nothing was sent
  */
 export async function GetKassenanweisungPDF(id) {
   let path = "/kassenanweisungen/"+id;
@@ -62,6 +62,18 @@ export async function GetAllInhabers() {
   });
   return returnObj
 
+}
+
+/**
+ * GetJahresabschlussPDF schickt einen Request an das Backend los, welches den Jahresabschluss als PDF zurück sendet.
+ * Zurück kommt dann ein Blob, welches dann mit res.type(blob.type) und res.send(Buffer.from(await blob.arrayBuffer())) zurück gesendet werden kann.
+ * @param {number} anlageId Die AnlageId
+ * @param {string} hhj Das Haushaltsjahr
+ * @returns {globalThis.Blob}
+ */
+export async function GetJahresabschlussPDF(anlageId, hhj) {
+  const path = "/jahresabschluss/"+anlageId+"?haushaltsjahr="+hhj
+  return await sendGetRequestPDF(path)
 }
 
 export async function UpdateKassenpruefung(kp) {

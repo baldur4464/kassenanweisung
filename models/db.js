@@ -11,6 +11,12 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
+/**
+ * 
+ * @param {string} sql 
+ * @param {any} args 
+ * @returns {Promise<any>}
+ */
 export function asyncQuery(sql, args) {
   return new Promise((resolve, reject) => {
     connection.query(sql, args, (err, rows) => {

@@ -1,5 +1,15 @@
 import connection, { asyncQuery } from './db.js'
 
+/**
+ * 
+ * @returns {Promise<string[]>}
+ */
+async function getHaushaltsjahre() {
+  const query = "SELECT Haushaltsjahr FROM " + process.env.DB_NAME + ".Kassenanweisungen GROUP BY Haushaltsjahr ORDER BY Haushaltsjahr DESC"
+  let rows = await asyncQuery(query)
+  return rows
+}
+
 //Modelle für Views
 function viewAllKaWe(req, res) {
   const page = req.query.page ? req.query.page : 1
@@ -78,9 +88,10 @@ function viewAllKaWe(req, res) {
     firstpage = page == 1
     lastpage = page == maxpage
 
-    console.log("Page: " + page)
+    const hhj_arr = await getHaushaltsjahre()
 
     res.render('kaweanzeigen', {
+      Header_HHJ: hhj_arr,
       rows: rows,
       page: page,
       firstpage: firstpage,
@@ -303,13 +314,15 @@ WHERE ka.Id = ?`
   connection.query(sql, [id], (err, rows) => {
     if (err) console.log(err)
     console.log("Rendering with fields: " + JSON.stringify({ rows, ...extraFields }))
-    res.render(renderFile, { rows, ...extraFields })
+    const Header_HHJ = await getHaushaltsjahre()
+    res.render(renderFile, { rows, ...extraFields, Header_HHJ })
   })
 }
 
 //Modelle für interne Datenbankabfragen
 
 export {
+  getHaushaltsjahre,
   viewAllKaWe,
   viewEditKaWe,
   insertKaWe,

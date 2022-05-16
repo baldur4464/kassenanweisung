@@ -9,6 +9,8 @@ import { kpRouter } from "./routes/kassenpruefungen.js";
 import { getAllInhaber } from "./models/inhaber.model.js";
 import { getGeldanlagenForInhaber } from "./models/geldanlage.model.js";
 import { inhRouter } from "./routes/inhaber.js";
+import { router as jabschlRouter } from "./routes/jahresabschluss.js";
+import { getHaushaltsjahre } from "./models/kassenanweisung.model.js";
 
 
 dotenv.config();
@@ -40,13 +42,15 @@ app.get('/', async(req, res) => {
   inhaber_model.map(({ Id, Name }) => {
     inhaber_Arr.push(Name)
   });
+  const hhj_arr = await getHaushaltsjahre()
 
-  res.render('kassenanweisung', { Haushaltsjahr: "19/20", Titlenr: "1", Inhaber: JSON.stringify(inhaber_Arr) })
+  res.render('kassenanweisung', { Haushaltsjahr: "19/20", Titlenr: "1", Inhaber: JSON.stringify(inhaber_Arr), Header_HHJ: hhj_arr, })
 });
 
 app.use("/inhaber", inhRouter);
 app.use('/kassenanweisungen', router);
 app.use("/kassenpruefungen", kpRouter);
+app.use("/jahresabschluss", jabschlRouter);
 
 
 app.listen(port, () => {

@@ -1,0 +1,26 @@
+<div class="container-fluid">
+    <h1>{{hhj}}</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name der Geldanlage</th>
+                <th>Anfangsbetrag</th>
+                <th>Endbetrag</th>
+                <th class="text-end">Download</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each rows}}
+            <tr>
+                <td>{{Name}}</td>
+                <td>{{Anfangsbetrag}}</td>
+                <td>{{Endbetrag}}</td>
+                <td>
+                    <a href="{{PDF_Link}}" target="_blank" type="button" class="btn btn-small btn-primary">PDF</a>
+                    <a href="{{ZIP_Link}}" type="button" class="btn btn-small btn-secondary" download="{{ZIP_Name}}">ZIP</a>
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>
