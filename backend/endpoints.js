@@ -118,24 +118,11 @@ async function sendGetRequestPDF(path) {
     if (response.status !== 200) {
       console.log("Error: Status was not 200 but " + response.status);
     }
-    let obj = await response.blob()
-    return obj
+    const obj = await response.blob()
+    const pdfData = await obj.arrayBuffer()
+    return pdfData
   } catch (e) {
     console.log(e);
   }
   return undefined;
-}
-
-async function readAllChunks(readableStream) {
-  const reader = readableStream.getReader();
-  const chunks = [];
-  
-  let done, value;
-  while (!done) {
-    ({ value, done } = await reader.read());
-    if (done) {
-      return chunks;
-    }
-    chunks.push(value);
-  }
 }
