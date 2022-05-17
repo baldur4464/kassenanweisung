@@ -254,8 +254,18 @@ async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName
 }
 
 async function neueTitelnr (Haushaltsjahr) {
-  let rows = asyncQuery('SELECT MAX(Titelnr) AS maxTitelNr FROM ' + process.env.DB_NAME + '.Kassenanweisungen WHERE Haushaltsjahr=?', [Haushaltsjahr]).catch(err => {throw err})
+  let rows = await asyncQuery('SELECT MAX(Titelnr) AS maxTitelNr FROM ' + process.env.DB_NAME + '.Kassenanweisungen WHERE Haushaltsjahr=?', [Haushaltsjahr]).catch(err => {throw err})
   return rows;
+}
+
+/**
+ * 
+ * @returns {{Id: string, Name: string}[]}
+ */
+async function GetGeldanlagenForInhaber() {
+  const SQL = "SELECT g.Id, g.Name FROM "+process.env.DB_NAME+".Geldanlagen g LEFT JOIN "+process.env.DB_NAME+".Inhaber i ON g.InhaberId = i.Id WHERE i.Name = \"Fachschaft ET\""
+  let rows = await asyncQuery(SQL)
+  return rows
 }
 
 function renderKaWeWith(id, renderFile, res, extraFields) {
@@ -322,6 +332,7 @@ WHERE ka.Id = ?`
 //Modelle für interne Datenbankabfragen
 
 export {
+  GetGeldanlagenForInhaber,
   getHaushaltsjahre,
   viewAllKaWe,
   viewEditKaWe,

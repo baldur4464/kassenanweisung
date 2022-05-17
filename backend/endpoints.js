@@ -72,8 +72,30 @@ export async function GetAllInhabers() {
  * @returns {globalThis.Blob}
  */
 export async function GetJahresabschlussPDF(anlageId, hhj) {
-  const path = "/jahresabschluss/"+anlageId+"?haushaltsjahr="+hhj
+  const path = "/jahresabschluss/"+anlageId+"/download?haushaltsjahr="+hhj
   return await sendGetRequestPDF(path)
+}
+
+/**
+ * 
+ * @param {string} anlageId 
+ * @param {string} hhj 
+ * @returns {{
+ *  Fehlermeldungen: string[],
+ *  Inhaber: string,
+ *  Haushaltsjahr: string,
+ *  Geldanlage: {Id: number, Name: string, Konto: boolean, IBan: string, InhaberId: number, Bank: string, BIC: string,},
+ *  Anfangsbetrag: number,
+ *  Endbetrag: number,
+ *  Einnahmen: number,
+ *  Ausgaben: number,
+ *  Kassenpruefungen: {Id: number, Datum: string, Betrag: number, Geldanlage: number,}[],
+ *  Kassenstaende: {Sammeldatum: string, Kassenstand_beginn: number, Kassenstand_ende: number, Fehlerwert: number, Kassenanweisungen: {Id: number, Haushaltsjahr: string, Titelnr: number, Begruendung: string, Betrag: number, Zahlungsart: string, Beleg: string, Ausstellungsdatum: string, Zahlungsdatum: string, Geldanlage_Geldempfaenger: number, Geldanlage_Geldgeber: number,}[]}[],
+ * }}
+ */
+export async function GetJahresabschlussJSON(anlageId, hhj) {
+  const path = "/jahresabschluss/"+anlageId+"?haushaltsjahr="+hhj
+  return await sendGetRequestJSON(path)
 }
 
 export async function UpdateKassenpruefung(kp) {
