@@ -67,20 +67,32 @@ export async function GetAllInhabers() {
 /**
  * GetJahresabschlussPDF schickt einen Request an das Backend los, welches den Jahresabschluss als PDF zurück sendet.
  * Zurück kommt dann ein Blob, welches dann mit res.type(blob.type) und res.send(Buffer.from(await blob.arrayBuffer())) zurück gesendet werden kann.
- * @param {number} anlageId Die AnlageId
+ * @param {number | string} anlageId Die AnlageId
  * @param {string} hhj Das Haushaltsjahr
- * @returns {globalThis.Blob}
+ * @returns {Promise<globalThis.Blob>}
  */
 export async function GetJahresabschlussPDF(anlageId, hhj) {
   const path = "/jahresabschluss/"+anlageId+"/download?haushaltsjahr="+hhj
   return await sendGetRequestPDF(path)
 }
 
+
+/**
+ * 
+ * @param {number | string} anlageId 
+ * @param {string} hhj 
+ * @returns {Promise<globalThis.Blob>}
+ */
+export async function GetJahresabschlussZIP(anlageId, hhj) {
+  const path = "/jahresabschluss/"+anlageId+"/download?haushaltsjahr="+hhj
+  return await sendGetRequestZIP(path)
+}
+
 /**
  * 
  * @param {string} anlageId 
  * @param {string} hhj 
- * @returns {{
+ * @returns {Promise<{
  *  Fehlermeldungen: string[],
  *  Inhaber: string,
  *  Haushaltsjahr: string,
@@ -91,7 +103,7 @@ export async function GetJahresabschlussPDF(anlageId, hhj) {
  *  Ausgaben: number,
  *  Kassenpruefungen: {Id: number, Datum: string, Betrag: number, Geldanlage: number,}[],
  *  Kassenstaende: {Sammeldatum: string, Kassenstand_beginn: number, Kassenstand_ende: number, Fehlerwert: number, Kassenanweisungen: {Id: number, Haushaltsjahr: string, Titelnr: number, Begruendung: string, Betrag: number, Zahlungsart: string, Beleg: string, Ausstellungsdatum: string, Zahlungsdatum: string, Geldanlage_Geldempfaenger: number, Geldanlage_Geldgeber: number,}[]}[],
- * }}
+ * }>}
  */
 export async function GetJahresabschlussJSON(anlageId, hhj) {
   const path = "/jahresabschluss/"+anlageId+"?haushaltsjahr="+hhj
@@ -147,6 +159,26 @@ async function sendGetRequestPDF(path) {
       method: "GET",
       headers: {
         'Accept': "application/pdf"
+      },
+    });
+    if (response.status !== 200) {
+      console.log("Error: Status was not 200 but " + response.status);
+    }
+    const obj = await response.blob()
+    return obj
+  } catch (e) {
+    console.log(e);
+  }
+  return undefined;
+}
+
+async function sendGetRequestZIP(path) {
+  let url = "http://"+process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        'Accept': "application/zip"
       },
     });
     if (response.status !== 200) {

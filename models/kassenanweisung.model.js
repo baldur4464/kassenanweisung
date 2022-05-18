@@ -2,7 +2,7 @@ import connection, { asyncQuery } from './db.js'
 
 /**
  * 
- * @returns {Promise<string[]>}
+ * @returns {Promise<{Kassenanweisung: string}[]>}
  */
 async function getHaushaltsjahre() {
   const query = "SELECT Haushaltsjahr FROM " + process.env.DB_NAME + ".Kassenanweisungen GROUP BY Haushaltsjahr ORDER BY Haushaltsjahr DESC"
@@ -75,7 +75,7 @@ function viewAllKaWe(req, res) {
       limit
   }
 
-  connection.query(sql, (err, rows) => {
+  connection.query(sql, async (err, rows) => {
     if (err) console.log(err);
     let firstpage
     let lastpage
@@ -260,7 +260,7 @@ async function neueTitelnr (Haushaltsjahr) {
 
 /**
  * 
- * @returns {{Id: string, Name: string}[]}
+ * @returns {Promise<{Id: string, Name: string}[]>}
  */
 async function GetGeldanlagenForInhaber() {
   const SQL = "SELECT g.Id, g.Name FROM "+process.env.DB_NAME+".Geldanlagen g LEFT JOIN "+process.env.DB_NAME+".Inhaber i ON g.InhaberId = i.Id WHERE i.Name = \"Fachschaft ET\""
@@ -321,7 +321,7 @@ LEFT JOIN (
 	ka.Geldanlage_Geldempfaenger = Ga2.Id
 WHERE ka.Id = ?`
 
-  connection.query(sql, [id], (err, rows) => {
+  connection.query(sql, [id], async (err, rows) => {
     if (err) console.log(err)
     console.log("Rendering with fields: " + JSON.stringify({ rows, ...extraFields }))
     const Header_HHJ = await getHaushaltsjahre()
