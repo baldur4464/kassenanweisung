@@ -113,6 +113,7 @@ function viewEditKaWe(req, res) {
 }
 
 async function insertKaWe(req, res) {
+  console.log("Request body: " + JSON.stringify(req.body));
   let {
     Haushaltsjahr,
     Titelnr,
@@ -127,6 +128,8 @@ async function insertKaWe(req, res) {
     Ausstellungsdatum,
     Zahlungsdatum,
   } = req.body
+
+  console.log("Beleg: " + Beleg);
 
   let rawTitlenr = await neueTitelnr(req.body.Haushaltsjahr)
   console.log(rawTitlenr);
@@ -170,7 +173,7 @@ function deleteKaWe(req, res) {
       if (err) console.log(err)
     },
   )
-  if(req.query.prevFilter != null && req.query.prevFilter != "") {
+  if (req.query.prevFilter != null && req.query.prevFilter != "") {
     res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&filter=' + req.query.prevFilter + '&limit=' + req.query.prevLimit + '&removed=true')
   } else {
     res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&limit=' + req.query.prevLimit + '&removed=true')
@@ -220,14 +223,14 @@ async function updateKaWe(req, res) {
       if (req.query.prevFilter != null && req.query.prevFilter != "") {
         res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&filter=' + req.query.prevFilter + '&limit=' + req.query.prevLimit + '&edit=true')
       } else {
-        res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&limit=' + req.query.prevLimit+ '&edit=true')
+        res.redirect('/kassenanweisungen?page=' + req.query.prevPage + '&limit=' + req.query.prevLimit + '&edit=true')
       }
     }
   )
 }
 
 function viewKaWe(req, res) {
-  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter, PrevLimit: req.query.prevLimit})
+  renderKaWeWith(req.params.id, 'kaweview', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter, PrevLimit: req.query.prevLimit })
 }
 
 async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName) {
