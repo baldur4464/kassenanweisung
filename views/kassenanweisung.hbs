@@ -181,12 +181,33 @@ Zahlungsdatum: Textfeld
                     if (!multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText)) {
                         multiSelect._handleOption(listItem);
                     }
+                } else {
+                    if (multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText)) {
+                        multiSelect._handleOption(listItem);
+                    }
                 }
             });
-        } else if (!geldanlage_geldgeber.Konto && !geldanlage_geldempfaenger.Konto) {
+        } else if (!geldanlage_geldgeber.Konto && !geldanlage_geldempfaenger.Konto && geldgeber.value !== geldempfaenger.value) {
             optionsHtml.forEach((listItem) => {
                 if (listItem.innerText === "Quittung" || listItem.innerText === "Rechnung") {
                     if (!multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText)) {
+                        multiSelect._handleOption(listItem);
+                    }
+                } else {
+                    if (multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText)) {
+                        multiSelect._handleOption(listItem);
+                    }
+                }
+            });
+        } else if (!geldanlage_geldgeber.Konto && !geldanlage_geldempfaenger.Konto) {
+            // eigenes Bargeldkonto zu eigenem Bargeldkonto
+            optionsHtml.forEach((listItem) => {
+                if (listItem.innerText === "Kassenbuch") {
+                    if (!multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText)) {
+                        multiSelect._handleOption(listItem);
+                    }
+                } else {
+                    if (multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText)) {
                         multiSelect._handleOption(listItem);
                     }
                 }
