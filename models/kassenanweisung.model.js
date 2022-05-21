@@ -109,6 +109,7 @@ function viewAllKaWe(req, res) {
 }
 
 function viewEditKaWe(req, res) {
+  // Find out Selected fields
   renderKaWeWith(req.params.id, 'kaweedit', res, { PrevPage: req.query.prevPage, PrevFilter: req.query.prevFilter, PrevLimit: req.query.prevLimit })
 }
 
@@ -147,17 +148,17 @@ async function insertKaWe(req, res) {
     '.Kassenanweisungen SET Haushaltsjahr = ?, Titelnr = ?, Geldanlage_Geldgeber = ?, Begruendung = ?, Betrag = ?, Geldanlage_Geldempfaenger = ?, Zahlungsart = ?, Beleg = ?, Ausstellungsdatum = ?, Zahlungsdatum = ?'
   connection.query(
     sql, [
-      Haushaltsjahr,
-      Titelnr,
-      GeldgeberIds.GeldanlageId,
-      Begruendung,
-      Betrag,
-      GeldempfaengerIds.GeldanlageId,
-      Zahlungsart,
-      Beleg,
-      Ausstellungsdatum,
-      Zahlungsdatum,
-    ],
+    Haushaltsjahr,
+    Titelnr,
+    GeldgeberIds.GeldanlageId,
+    Begruendung,
+    Betrag,
+    GeldempfaengerIds.GeldanlageId,
+    Zahlungsart,
+    Beleg,
+    Ausstellungsdatum,
+    Zahlungsdatum,
+  ],
     (err) => {
       if (err) console.log((err))
       res.redirect('?created=true')
@@ -202,18 +203,18 @@ async function updateKaWe(req, res) {
 
   connection.query(
     'UPDATE ' + process.env.DB_NAME + '.Kassenanweisungen SET Haushaltsjahr = ?, Titelnr = ?, Geldanlage_Geldgeber = ?, Begruendung = ?, Betrag = ?, Geldanlage_Geldempfaenger = ?, Zahlungsart = ?, Beleg = ?, Ausstellungsdatum = ?, Zahlungsdatum = ? WHERE Id = ?', [
-      Haushaltsjahr,
-      Titelnr,
-      GeldgeberIds.GeldanlageId,
-      Begruendung,
-      Betrag,
-      GeldempfaengerIds.GeldanlageId,
-      Zahlungsart,
-      Beleg,
-      Ausstellungsdatum,
-      Zahlungsdatum,
-      req.params.id,
-    ],
+    Haushaltsjahr,
+    Titelnr,
+    GeldgeberIds.GeldanlageId,
+    Begruendung,
+    Betrag,
+    GeldempfaengerIds.GeldanlageId,
+    Zahlungsart,
+    Beleg,
+    Ausstellungsdatum,
+    Zahlungsdatum,
+    req.params.id,
+  ],
     (err) => {
       if (err) {
         console.log(err)
@@ -256,8 +257,8 @@ async function createInhaberAndGeldanlageIfNotExists(inhaberName, geldanlageName
   return { InhaberId: inhaberId, GeldanlageId: geldanlageId }
 }
 
-async function neueTitelnr (Haushaltsjahr) {
-  let rows = await asyncQuery('SELECT MAX(Titelnr) AS maxTitelNr FROM ' + process.env.DB_NAME + '.Kassenanweisungen WHERE Haushaltsjahr=?', [Haushaltsjahr]).catch(err => {throw err})
+async function neueTitelnr(Haushaltsjahr) {
+  let rows = await asyncQuery('SELECT MAX(Titelnr) AS maxTitelNr FROM ' + process.env.DB_NAME + '.Kassenanweisungen WHERE Haushaltsjahr=?', [Haushaltsjahr]).catch(err => { throw err })
   return rows;
 }
 
@@ -266,7 +267,7 @@ async function neueTitelnr (Haushaltsjahr) {
  * @returns {Promise<{Id: string, Name: string}[]>}
  */
 async function GetGeldanlagenForInhaber() {
-  const SQL = "SELECT g.Id, g.Name FROM "+process.env.DB_NAME+".Geldanlagen g LEFT JOIN "+process.env.DB_NAME+".Inhaber i ON g.InhaberId = i.Id WHERE i.Name = \"Fachschaft ET\""
+  const SQL = "SELECT g.Id, g.Name FROM " + process.env.DB_NAME + ".Geldanlagen g LEFT JOIN " + process.env.DB_NAME + ".Inhaber i ON g.InhaberId = i.Id WHERE i.Name = \"Fachschaft ET\""
   let rows = await asyncQuery(SQL)
   return rows
 }
@@ -324,12 +325,33 @@ LEFT JOIN (
 	ka.Geldanlage_Geldempfaenger = Ga2.Id
 WHERE ka.Id = ?`
 
-  connection.query(sql, [id], async (err, rows) => {
-    if (err) console.log(err)
-    console.log("Rendering with fields: " + JSON.stringify({ rows, ...extraFields }))
-    const Header_HHJ = await getHaushaltsjahre()
-    res.render(renderFile, { rows, ...extraFields, Header_HHJ })
-  })
+  connection.query(sql, [id],
+    /**
+    * @param {Error} err
+    * @param { {
+    *    Id: number, 
+    *    Haushaltsjahr: string, 
+    *    Titelnr: number, 
+    *    Betrag: number, 
+    *    Begruendung: string, 
+    *    Zahlungsdatum: string,
+    *    Ausstellungsdatum: string,
+    *    Zahlungsart: string,
+    *    Beleg: string,
+    *    Geldanlage_Geldgeber: number,
+    *    Geldanlage_Geldempfaenger: number,
+    *    Name_Geldempfaenger: string,
+    *    Name_Geldgeber: string,
+    *    Name_Geldanlage_Geldempfaenger: string,
+    *    Name_Geldanlage_Geldgeber: string,
+    *    }[]} rows
+    */
+    async (err, rows) => {
+      if (err) console.log(err)
+      console.log("Rendering with fields: " + JSON.stringify({ rows, ...extraFields }))
+      const Header_HHJ = await getHaushaltsjahre()
+      res.render(renderFile, { rows, ...extraFields, Header_HHJ })
+    })
 }
 
 //Modelle für interne Datenbankabfragen
