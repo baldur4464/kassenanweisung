@@ -161,6 +161,12 @@ Zahlungsdatum: Textfeld
             } else {
                 if (geldempfaenger.value !== "Fachschaft ET") {
                     zahlungsart.value = "Bargeldauszahlung";
+                } else if (geldanlage_geldempfaenger.Konto) {
+                    zahlungsart.value = "Kontoeinzahlung";
+                } else if (geldanlage_geldempfaenger.Name === "Safe FSET") {
+                    zahlungsart.value = "Tresoreinzahlung";
+                } else {
+                    zahlungsart.value = "Bargeldauszahlung";
                 }
             }
         }
