@@ -180,7 +180,7 @@ Zahlungsdatum: Textfeld
         } else if (!geldanlage_geldgeber.Konto && !geldanlage_geldempfaenger.Konto) {
             optionsHtml.forEach((listItem) => {
                 if (listItem.innerText === "Quittung" || listItem.innerText === "Rechnung") {
-                    if (!multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText) {
+                    if (!multiSelect._selectedOptions.find((obj) => obj.text === listItem.innerText)) {
                         multiSelect._handleOption(listItem);
                     }
                 }
