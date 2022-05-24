@@ -1,6 +1,8 @@
 import express from "express";
+import { GetKassenanweisungPDF as GetKassenanweisungPDF } from "../backend/endpoints.js";
 import * as model from "../models/kassenanweisung.model.js";
 import * as pdfservice from "../services/KassenanweisungPDF.js";
+import {Blob} from "buffer"
 
 const router = express.Router();
 
@@ -30,6 +32,12 @@ router.get('/view/:id', (req, res) => {
 
 router.get('/download', (req, res) => {
   pdfservice.kassenanweisungdownload(req, res);
+})
+
+router.get('/pdf/:id', async (req, res) => {
+  let buffer = await GetKassenanweisungPDF(req.params.id)
+  res.type(buffer.type)
+  res.send(Buffer.from(await buffer.arrayBuffer()))
 })
 
 router.get('*', (req, res) => {

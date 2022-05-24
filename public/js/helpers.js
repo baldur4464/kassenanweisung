@@ -33,5 +33,13 @@ export default {
     } else {
       return false
     }
+  },
+  /**
+   * 
+   * @param {string} text 
+   * @returns {string}
+   */
+  createJahresabschlussPath: function(text) {
+    return "/jahresabschluss/"+encodeURIComponent(text);
   }
 };

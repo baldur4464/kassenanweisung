@@ -16,12 +16,14 @@ kpRouter.get("/", async(req, res) => {
     return
   }
   let lastpage = page == Math.ceil(kps.length / limit);
-  res.render("kaprueanzeigen", { rows: kps, page: page, firstpage: firstpage, lastpage: lastpage, updated: updated, removed: removed, });
+  const hhj_arr = await getHaushaltsjahre()
+  res.render("kaprueanzeigen", { rows: kps, page: page, firstpage: firstpage, lastpage: lastpage, updated: updated, removed: removed, HEADER_HHJ: hhj_arr,});
 });
 
 kpRouter.get("/edit/:id", async(req, res) => {
   let kp = await GetKassenpruefung(req.params.id);
-  res.render("kaprueedit", {...kp, PrevPage: req.query.prevPage });
+  const hhj_arr = await getHaushaltsjahre()
+  res.render("kaprueedit", {...kp, PrevPage: req.query.prevPage, HEADER_HHJ: hhj_arr });
 })
 
 kpRouter.put("/edit/:id", async(req, res) => {
@@ -31,9 +33,10 @@ kpRouter.put("/edit/:id", async(req, res) => {
     Betrag,
   } = req.body
   res = await UpdateKassenpruefung(kp)
+  const hhj_arr = await getHaushaltsjahre()
   if (res === 200) {
     res.redirect('/kassenpruefungen?page=' + req.query.prevPage + '&edit=true')
-  } else res.render("kaprueedit", {...kp, error: true });
+  } else res.render("kaprueedit", {...kp, error: true, HEADER_HHJ: hhj_arr });
 })
 
 kpRouter.get("/create", (req, res) => {
