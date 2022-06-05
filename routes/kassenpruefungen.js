@@ -1,4 +1,5 @@
 import express from "express";
+import { getHaushaltsjahre } from "../models/kassenanweisung.model.js";
 import { GetKassenpruefungen, GetKassenpruefung, UpdateKassenpruefung } from "../backend/endpoints.js";
 
 const kpRouter = express.Router();
@@ -40,7 +41,11 @@ kpRouter.put("/edit/:id", async(req, res) => {
 })
 
 kpRouter.get("/create", (req, res) => {
-  res.render("404");
+  res.render("kaprue", {Datum: Date.now(),});
+})
+
+kpRouter.post("/create", (req, res) => {
+
 })
 
 kpRouter.get("/delete", (req, res) => {
