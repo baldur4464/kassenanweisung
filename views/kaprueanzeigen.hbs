@@ -9,6 +9,11 @@
         <p>Kassenprüfung wurde erfolgreich aktualisiert</p>
     </div>
 {{/if}}
+{{#if created}}
+    <div class="alert alert-success alert-dismissible fade show">
+        <p>Eine neue Kassenpruefung wurde erfolgreich hinzugefügt</p>
+    </div>
+{{/if}}
 <div class="container-fluid">
     <a href="/kassenpruefungen/create/" type="button" class="btn btn-small btn-primary">Kassenprüfung erstellen</a>
     <table class="table">

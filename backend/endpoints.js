@@ -21,6 +21,11 @@ export async function GetKassenpruefungen() {
   return returnObj
 }
 
+/**
+ * 
+ * @param {number} id The numerical Id of the kassenpruefung
+ * @returns {Promise<{Id: number, Datum: string, Betrag: number, GeldanlageId: number, Geldanlagename: string,}>}
+ */
 export async function GetKassenpruefung(id) {
   let path = "/kassenpruefungen/" + id;
   let obj = await sendGetRequestJSON(path)
@@ -31,6 +36,7 @@ export async function GetKassenpruefung(id) {
     Id: obj.Id,
     Datum: obj.Datum,
     Betrag: obj.Betrag,
+
   }
 }
 
@@ -38,7 +44,7 @@ export async function GetKassenpruefung(id) {
  * GetKassenanweisungPDF requests a PDF File with a filled out form for the ID from the backend and sends the file to the user.
  * 
  * @param {number} id 
- * @returns {globalThis.Blob} A PDF Form containing the information or undefined if nothing was sent
+ * @returns {Promise<globalThis.Blob>} A PDF Form containing the information or undefined if nothing was sent
  */
 export async function GetKassenanweisungPDF(id) {
   let path = "/kassenanweisungen/"+id;
@@ -110,9 +116,29 @@ export async function GetJahresabschlussJSON(anlageId, hhj) {
   return await sendGetRequestJSON(path)
 }
 
+/**
+ * 
+ * @param {{Id: number, Datum: string, Betrag: number, GeldanlageId: number, Geldanlagename: string,}} kp 
+ * @returns {Promise<number>} The status Code resulting from the request
+ */
 export async function UpdateKassenpruefung(kp) {
-  let res = await sendPostOrPutJSON("/kassenpruefungen/" + kp.Id, kp, "PUT");
+  const {Id, kp_no_Id} = kp
+  let res = await sendPostOrPutJSON("/kassenpruefungen/" + Id, kp_no_Id, "PUT");
   return res
+}
+
+/**
+ * 
+ * @param {{Datum: string, Betrag: number, GeldanlageId: number, Geldanlagename: string,}} kp 
+ * @returns {Promise<number>} The status Code resulting from the request
+ */
+export async function CreateKassenpruefung(kp) {
+  let res = await sendPostOrPutJSON("kassenpruefungen/", kp, "POST");
+  return res
+}
+
+export async function DeleteKassenpruefung(kp) {
+  return await sendDelete("kassenpruefungen/"+kp.Id)
 }
 
 async function sendGetRequestJSON(path) {
@@ -190,4 +216,17 @@ async function sendGetRequestZIP(path) {
     console.log(e);
   }
   return undefined;
+}
+
+async function sendDelete(path) {
+  let url = "http://"+process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  try {
+    const response = await fetch(url, {
+      method: "DELETE",
+    });
+    return response.status;
+  } catch (e) {
+    console.log(e);
+  }
+  return 400;
 }
