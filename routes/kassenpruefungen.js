@@ -1,7 +1,7 @@
 import express from "express";
 import { getHaushaltsjahre } from "../models/kassenanweisung.model.js";
 import { getGeldanlagenForInhaber } from "../models/geldanlage.model.js";
-import { GetKassenpruefungen, GetKassenpruefung, UpdateKassenpruefung, CreateKassenpruefung } from "../backend/endpoints.js";
+import { GetKassenpruefungen, GetKassenpruefung, UpdateKassenpruefung, CreateKassenpruefung, DeleteKassenpruefung } from "../backend/endpoints.js";
 import { format } from "date-fns";
 
 const kpRouter = express.Router();
@@ -54,21 +54,21 @@ kpRouter.get("/create", async (req, res) => {
   }),});
 })
 
-kpRouter.post("/create", (req, res) => {
+kpRouter.post("/create", async (req, res) => {
   const kp = {
     Datum,
     Betrag,
-    GeldanlageId: parseInt(Geldanlage),
+    GeldanlageId: Geldanlage,
   } = req.body
-  const code = await CreateKassenpruefung(kp);
+  const code = await CreateKassenpruefung({...kp, GeldanlageId: parseInt(kp.GeldanlageId)});
   if (code === 200) {
     res.redirect('/kassenpruefungen?created=true')
   }
 })
 
-kpRouter.get("/delete", (req, res) => {
+kpRouter.get("/delete", async (req, res) => {
   const prevPage = req.query.prevPage ? req.query.prevPage : 1;
-  await De
+  const code = await DeleteKassenpruefung(1);
   res.render("404");
 })
 

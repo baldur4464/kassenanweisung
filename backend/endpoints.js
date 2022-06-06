@@ -1,5 +1,4 @@
 import fetch from "node-fetch"
-import {Blob} from "buffer"
 
 
 export async function GetKassenpruefungen() {
@@ -137,8 +136,13 @@ export async function CreateKassenpruefung(kp) {
   return res
 }
 
+/**
+ * 
+ * @param {number} kp The Id of the Kassenpruefung
+ * @returns {Promise<number>} an http status Code describing the result
+ */
 export async function DeleteKassenpruefung(kp) {
-  return await sendDelete("kassenpruefungen/"+kp.Id)
+  return await sendDelete("kassenpruefungen/"+kp)
 }
 
 async function sendGetRequestJSON(path) {
