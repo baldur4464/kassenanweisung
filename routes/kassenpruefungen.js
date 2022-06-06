@@ -27,7 +27,8 @@ kpRouter.get("/", async(req, res) => {
 kpRouter.get("/edit/:id", async(req, res) => {
   let kp = await GetKassenpruefung(req.params.id);
   const hhj_arr = await getHaushaltsjahre()
-  res.render("kaprueedit", {Id: kp.Id, Datum: kp.Datum, Geldanlage: kp.Geldanlagename, Betrag: kp.Betrag, PrevPage: req.query.prevPage, HEADER_HHJ: hhj_arr });
+  const geldanlagen = await getGeldanlagenForInhaber("Fachschaft ET");
+  res.render("kaprueedit", {Id: kp.Id, Datum: kp.Datum, Geldanlage: kp.Geldanlagename, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), Betrag: kp.Betrag, PrevPage: req.query.prevPage, HEADER_HHJ: hhj_arr });
 })
 
 kpRouter.put("/edit/:id", async(req, res) => {
@@ -49,15 +50,15 @@ kpRouter.put("/edit/:id", async(req, res) => {
 
 kpRouter.get("/create", async (req, res) => {
   const geldanlagen = await getGeldanlagenForInhaber("Fachschaft ET");
-  res.render("kaprue", {Datum: format(Date.now(), "dd.MM.yyyy"), Geldanlagen: geldanlagen.map((e) => {
+  res.render("kaprue", {Datum: format(Date.now(), "yyyy-MM-dd"), Geldanlagen: geldanlagen.map((e) => {
     return {Name: e.Name, Id: e.Id};
   }),});
 })
 
 kpRouter.post("/create", async (req, res) => {
   const kp = {
-    Datum,
-    Betrag,
+    Datum: date,
+    Betrag: amount,
     GeldanlageId: Geldanlage,
   } = req.body
   const code = await CreateKassenpruefung({...kp, GeldanlageId: parseInt(kp.GeldanlageId)});
