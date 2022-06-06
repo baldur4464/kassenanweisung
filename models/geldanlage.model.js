@@ -14,7 +14,7 @@ export async function getAllGeldanlagen() {
 /**
  * 
  * @param {string} inhaberName 
- * @returns {{Id: number, Name: string, Inhaber: string}}
+ * @returns {Promise<{Id: number, Name: string, Inhaber: string, Konto: boolean,}[]>} all Geldanlagen for this Inhaber with their Name, Ids and other Information.
  */
 export async function getGeldanlagenForInhaber(inhaberName) {
   let dbName = process.env.DB_NAME ? process.env.DB_NAME : 'Kassenanweisung';

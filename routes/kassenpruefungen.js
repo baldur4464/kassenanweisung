@@ -1,6 +1,8 @@
 import express from "express";
 import { getHaushaltsjahre } from "../models/kassenanweisung.model.js";
+import { getGeldanlagenForInhaber } from "../models/geldanlage.model.js";
 import { GetKassenpruefungen, GetKassenpruefung, UpdateKassenpruefung } from "../backend/endpoints.js";
+import { format } from "date-fns";
 
 const kpRouter = express.Router();
 
@@ -40,8 +42,11 @@ kpRouter.put("/edit/:id", async(req, res) => {
   } else res.render("kaprueedit", {...kp, error: true, HEADER_HHJ: hhj_arr });
 })
 
-kpRouter.get("/create", (req, res) => {
-  res.render("kaprue", {Datum: Date.now(),});
+kpRouter.get("/create", async (req, res) => {
+  const geldanlagen = await getGeldanlagenForInhaber("Fachschaft ET");
+  res.render("kaprue", {Datum: format(Date.now(), "dd.MM.yyyy"), Geldanlagen: geldanlagen.map((e) => {
+    return e.Name;
+  }),});
 })
 
 kpRouter.post("/create", (req, res) => {

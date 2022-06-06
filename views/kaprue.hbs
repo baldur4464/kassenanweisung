@@ -15,6 +15,14 @@
                 <label for="amount">Betrag am Ende des Tages</label>
                 <input type="text" class="form-control " name="amount" id="amount" value="{{Betrag}}">
             </div>
+            <div>
+                <label for="geldanlage">Geldanlage</label>
+                <select id="geldanlage" class="form-control" name="Geldanlage">
+                    {{#each Geldanlagen}}
+                    <option value="{{.}}">{{.}}</option>
+                    {{/each}}
+                </select>
+            </div>
         </div>
         <div class="row abstand">
             <div class="col">
