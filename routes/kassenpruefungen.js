@@ -56,11 +56,12 @@ kpRouter.get("/create", async (req, res) => {
 })
 
 kpRouter.post("/create", async (req, res) => {
-  const kp = {
-    Datum: date,
-    Betrag: amount,
-    GeldanlageId: Geldanlage,
-  } = req.body
+  const {
+    date,
+    amount,
+    Geldanlage,
+  } = req.body;
+  const kp = {Datum: date, Betrag: amount, GeldanlageId: Geldanlage};
   const code = await CreateKassenpruefung({...kp, GeldanlageId: parseInt(kp.GeldanlageId)});
   if (code === 200) {
     res.redirect('/kassenpruefungen?created=true')
