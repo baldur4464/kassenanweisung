@@ -44,7 +44,7 @@ kpRouter.put("/edit/:id", async(req, res) => {
     res.redirect('/kassenpruefungen?page=' + req.query.prevPage + '&edit=true')
   } else {
     const geldanlagen = await getGeldanlagenForInhaber("Fachschaft ET");
-    res.render("kaprueedit", {Id: kp.Id, Geldanlagen: geldanlagen.map((e) => e.Name), Geldanlage: kp.Geldanlagename, Datum: kp.Datum, Betrag: kp.Betrag, error: true, HEADER_HHJ: hhj_arr });
+    res.render("kaprueedit", {Id: kp.Id, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), Geldanlage: kp.Geldanlagename, Datum: kp.Datum, Betrag: kp.Betrag, error: true, HEADER_HHJ: hhj_arr });
   }
 })
 
