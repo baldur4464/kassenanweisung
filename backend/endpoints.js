@@ -132,7 +132,7 @@ export async function UpdateKassenpruefung(kp) {
  * @returns {Promise<number>} The status Code resulting from the request
  */
 export async function CreateKassenpruefung(kp) {
-  let res = await sendPostOrPutJSON("kassenpruefungen/", kp, "POST");
+  let res = await sendPostOrPutJSON("/kassenpruefungen/", kp, "POST");
   return res
 }
 
@@ -142,7 +142,7 @@ export async function CreateKassenpruefung(kp) {
  * @returns {Promise<number>} an http status Code describing the result
  */
 export async function DeleteKassenpruefung(kp) {
-  return await sendDelete("kassenpruefungen/"+kp)
+  return await sendDelete("/kassenpruefungen/"+kp)
 }
 
 async function sendGetRequestJSON(path) {
