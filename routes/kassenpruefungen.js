@@ -26,9 +26,11 @@ kpRouter.get("/", async(req, res) => {
 
 kpRouter.get("/edit/:id", async(req, res) => {
   let kp = await GetKassenpruefung(req.params.id);
+  const date_parts = kp.Datum.split(".");
+  const kp_Datum = date_parts[2]+"-"+date_parts[1]+"-"+date_parts[0];
   const hhj_arr = await getHaushaltsjahre()
   const geldanlagen = await getGeldanlagenForInhaber("Fachschaft ET");
-  res.render("kaprueedit", {Id: kp.Id, Datum: kp.Datum, Geldanlage: kp.Geldanlagename, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), Betrag: kp.Betrag, PrevPage: req.query.prevPage, HEADER_HHJ: hhj_arr });
+  res.render("kaprueedit", {Id: kp.Id, Datum: kp_Datum, Geldanlage: kp.Geldanlagename, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), Betrag: kp.Betrag, PrevPage: req.query.prevPage, HEADER_HHJ: hhj_arr });
 })
 
 kpRouter.put("/edit/:id", async(req, res) => {
@@ -36,8 +38,9 @@ kpRouter.put("/edit/:id", async(req, res) => {
     Id,
     Datum,
     Betrag,
-    Geldanlagename: Geldanlage,
+    Geldanlagename,
   } = req.body
+  console.log("Got fields: "+JSON.stringify(kp))
   const code = await UpdateKassenpruefung(kp)
   const hhj_arr = await getHaushaltsjahre()
   if (code === 200) {
