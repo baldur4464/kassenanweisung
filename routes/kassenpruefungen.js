@@ -33,7 +33,7 @@ kpRouter.get("/edit/:id", async(req, res) => {
   res.render("kaprueedit", {Id: kp.Id, Datum: kp_Datum, Geldanlage: kp.Geldanlagename, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), Betrag: kp.Betrag, PrevPage: req.query.prevPage, Header_HHJ: hhj_arr });
 })
 
-kpRouter.put("/edit/:id", async(req, res) => {
+kpRouter.post("/edit/:id", async(req, res) => {
   const kp = {
     Id,
     Datum,
