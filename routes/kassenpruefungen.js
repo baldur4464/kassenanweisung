@@ -2,7 +2,7 @@ import express from "express";
 import { getHaushaltsjahre } from "../models/kassenanweisung.model.js";
 import { getGeldanlagenForInhaber } from "../models/geldanlage.model.js";
 import { GetKassenpruefungen, GetKassenpruefung, UpdateKassenpruefung, CreateKassenpruefung, DeleteKassenpruefung } from "../backend/endpoints.js";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 
 const kpRouter = express.Router();
 
@@ -64,9 +64,9 @@ kpRouter.post("/create", async (req, res) => {
     amount,
     Geldanlage,
   } = req.body;
-  const kp = {Datum: date, Betrag: amount, GeldanlageId: Geldanlage};
+  const kp = {Datum: parse(date, "yyyy-MM-dd"), Betrag: amount, GeldanlageId: Geldanlage};
   console.log("Sending "+JSON.stringify(kp))
-  const code = await CreateKassenpruefung({Datum: kp.Datum, Betrag: parseFloat(kp.Betrag), GeldanlageId: parseInt(kp.GeldanlageId)});
+  const code = await CreateKassenpruefung({Datum: format(kp.Datum, "dd.MM.yyyy"), Betrag: parseFloat(kp.Betrag), GeldanlageId: parseInt(kp.GeldanlageId)});
   if (code === 200) {
     res.redirect('/kassenpruefungen?created=true')
   } else {
