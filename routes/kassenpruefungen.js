@@ -13,15 +13,15 @@ kpRouter.get("/", async(req, res) => {
   const updated = req.query.edit ? req.query.edit : false
   const removed = req.query.removed ? req.query.removed : false
   const created = req.query.created ? req.query.created : false
+  const hhj_arr = await getHaushaltsjahre()
   let firstpage = page == 1
 
   if (kps === undefined) {
-    res.render("404.hbs")
+    res.render("404.hbs", {Header_HHJ: hhj_arr,})
     return
   }
   let lastpage = page == Math.ceil(kps.length / limit);
-  const hhj_arr = await getHaushaltsjahre()
-  res.render("kaprueanzeigen", { rows: kps, page: page, firstpage: firstpage, lastpage: lastpage, updated: updated, removed: removed, created: created, HEADER_HHJ: hhj_arr,});
+  res.render("kaprueanzeigen", { rows: kps, page: page, firstpage: firstpage, lastpage: lastpage, updated: updated, removed: removed, created: created, Header_HHJ: hhj_arr,});
 });
 
 kpRouter.get("/edit/:id", async(req, res) => {
@@ -30,7 +30,7 @@ kpRouter.get("/edit/:id", async(req, res) => {
   const kp_Datum = date_parts[2]+"-"+date_parts[1]+"-"+date_parts[0];
   const hhj_arr = await getHaushaltsjahre()
   const geldanlagen = await getGeldanlagenForInhaber("Fachschaft ET");
-  res.render("kaprueedit", {Id: kp.Id, Datum: kp_Datum, Geldanlage: kp.Geldanlagename, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), Betrag: kp.Betrag, PrevPage: req.query.prevPage, HEADER_HHJ: hhj_arr });
+  res.render("kaprueedit", {Id: kp.Id, Datum: kp_Datum, Geldanlage: kp.Geldanlagename, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), Betrag: kp.Betrag, PrevPage: req.query.prevPage, Header_HHJ: hhj_arr });
 })
 
 kpRouter.put("/edit/:id", async(req, res) => {
@@ -44,18 +44,19 @@ kpRouter.put("/edit/:id", async(req, res) => {
   const code = await UpdateKassenpruefung(kp)
   const hhj_arr = await getHaushaltsjahre()
   if (code === 200) {
-    res.redirect('/kassenpruefungen?page=' + req.query.prevPage + '&edit=true')
+    res.redirect('/kassenpruefungen?page=' + req.query.prevPage + '&updated=true')
   } else {
     const geldanlagen = await getGeldanlagenForInhaber("Fachschaft ET");
-    res.render("kaprueedit", {Id: kp.Id, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), Geldanlage: kp.Geldanlagename, Datum: kp.Datum, Betrag: kp.Betrag, error: true, HEADER_HHJ: hhj_arr });
+    res.render("kaprueedit", {Id: kp.Id, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), Geldanlage: kp.Geldanlagename, Datum: kp.Datum, Betrag: kp.Betrag, error: true, Header_HHJ: hhj_arr });
   }
 })
 
 kpRouter.get("/create", async (req, res) => {
   const geldanlagen = await getGeldanlagenForInhaber("Fachschaft ET");
+  const hhj_arr = await getHaushaltsjahre()
   res.render("kaprue", {Datum: format(Date.now(), "yyyy-MM-dd"), Geldanlagen: geldanlagen.map((e) => {
     return {Name: e.Name, Id: e.Id};
-  }),});
+  }), HEADER_HHJ: hhj_arr,});
 })
 
 kpRouter.post("/create", async (req, res) => {
@@ -71,7 +72,8 @@ kpRouter.post("/create", async (req, res) => {
     res.redirect('/kassenpruefungen?created=true')
   } else {
     const geldanlagen = await getGeldanlagenForInhaber("Fachschaft ET");
-    res.render("kaprue", {Datum: date, Betrag: amount, Geldanlage: Geldanlage, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), error: true,})
+    const hhj_arr = await getHaushaltsjahre()
+    res.render("kaprue", {Datum: date, Betrag: amount, Geldanlage: Geldanlage, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), error: true, Header_HHJ: hhj_arr,})
   }
 })
 
