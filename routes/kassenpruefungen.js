@@ -34,11 +34,13 @@ kpRouter.get("/edit/:id", async(req, res) => {
 })
 
 kpRouter.post("/edit/:id", async(req, res) => {
-  const kp = {
-    Datum: date,
-    Betrag: amount,
-    Geldanlagename: geldanlage,
+  const {
+    date,
+    amount,
+    geldanlage,
   } = req.body
+
+  const kp = {Datum: format(parse(date, "yyyy-MM-dd", new Date()), "dd.MM.yyyy"), Betrag: parseFloat(amount), GeldanlageId: parseInt(geldanlage)}
   console.log("Got fields: "+JSON.stringify(kp))
   const code = await UpdateKassenpruefung(kp)
   const hhj_arr = await getHaushaltsjahre()
