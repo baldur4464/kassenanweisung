@@ -123,7 +123,8 @@ export async function GetJahresabschlussJSON(anlageId, hhj) {
  */
 export async function UpdateKassenpruefung(kp) {
   const {Id, kp_no_Id} = kp
-  let res = await sendPostOrPutJSON("/kassenpruefungen/" + Id, kp_no_Id, "POST");
+  console.log("Does it work? \n"+JSON.stringify(kp)+"\n vs \n"+ JSON.stringify(kp_no_Id))
+  let res = await sendPostOrPutJSON("/kassenpruefungen/" + Id, kp, "POST");
   return res
 }
 
