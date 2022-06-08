@@ -1,5 +1,6 @@
 import fetch from "node-fetch"
 
+const TIMEOUT_VALUE = 3000;
 
 export async function GetKassenpruefungen() {
   let path = "/kassenpruefungen/";
@@ -147,16 +148,20 @@ export async function DeleteKassenpruefung(kp) {
 
 async function sendGetRequestJSON(path) {
   let url = "http://" + process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), TIMEOUT_VALUE);
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: {
         'Accept': "application/json"
       },
+      signal: controller.signal,
     });
     if (response.status !== 200) {
       console.log("Error: Status was not 200 but " + response.status);
     }
+    clearTimeout(id);
     return await response.json();
   } catch (e) {
     console.log(e);
@@ -166,6 +171,8 @@ async function sendGetRequestJSON(path) {
 
 async function sendPostOrPutJSON(path, jsonObject, method) {
   let url = "http://" + process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), TIMEOUT_VALUE);
   try {
     const response = await fetch(url, {
       method: method,
@@ -174,7 +181,9 @@ async function sendPostOrPutJSON(path, jsonObject, method) {
         'Accept': "application/json",
       },
       body: jsonObject,
+      signal: controller.signal,
     });
+    clearTimeout(id);
     return response.status;
   } catch (e) {
     console.log(e);
@@ -224,10 +233,14 @@ async function sendGetRequestZIP(path) {
 
 async function sendDelete(path) {
   let url = "http://"+process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), TIMEOUT_VALUE);
   try {
     const response = await fetch(url, {
       method: "DELETE",
+      signal: controller.signal,
     });
+    clearTimeout(id);
     return response.status;
   } catch (e) {
     console.log(e);
