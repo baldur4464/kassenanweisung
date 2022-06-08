@@ -3,7 +3,7 @@ import fetch from "node-fetch"
 const TIMEOUT_VALUE = 3000;
 
 export async function GetKassenpruefungen() {
-  let path = "/kassenpruefungen/";
+  let path = "/kassenpruefungen/?direction=DESC";
   let obj = await sendGetRequestJSON(path)
   if (obj === undefined) {
     return obj
