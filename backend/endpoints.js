@@ -29,15 +29,7 @@ export async function GetKassenpruefungen() {
 export async function GetKassenpruefung(id) {
   let path = "/kassenpruefungen/" + id;
   let obj = await sendGetRequestJSON(path)
-  if (obj === undefined) {
-    return obj;
-  }
-  return {
-    Id: obj.Id,
-    Datum: obj.Datum,
-    Betrag: obj.Betrag,
-
-  }
+  return obj
 }
 
 /**

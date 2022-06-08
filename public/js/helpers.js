@@ -43,7 +43,6 @@ export default {
     return "/jahresabschluss/"+encodeURIComponent(text);
   },
   stringEquals: function(value1, value2) {
-    console.log("Test: "+value1+" vs "+value2)
     return value1 === value2;
   },
 };
