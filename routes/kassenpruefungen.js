@@ -76,7 +76,7 @@ kpRouter.post("/create", async (req, res) => {
 })
 
 kpRouter.get("/delete/:id", async (req, res) => {
-  const id1 = req.params["id"]
+  const id1 = req.params.id;
   const prevPage = req.query.prevPage ? req.query.prevPage : 1;
   const code = await DeleteKassenpruefung(parseInt(id1));
   if (code === 200) {
