@@ -1,12 +1,18 @@
-{{#if removed}}
+{{#if deleted}}
+    <div class="alert alert-success alert-dismissible fade show">
+        Kassenprüfung wurde erfolgreich gelöscht.
+    </div>
+{{/if}}
+
+{{#if delete_error}}
     <div class="alert alert-danger alert-dismissible fade show">
-        <p>Kassenprüfung wurde erfolgreich gelöscht</p>
+        Kassenprüfung konnte nicht gelöscht werden.
     </div>
 {{/if}}
 
 {{#if updated}}
     <div class="alert alert-success alert-dismissible fade show">
-        <p>Kassenprüfung wurde erfolgreich aktualisiert</p>
+        Kassenprüfung wurde erfolgreich aktualisiert
     </div>
 {{/if}}
 {{#if created}}
