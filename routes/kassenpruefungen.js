@@ -64,7 +64,7 @@ kpRouter.post("/create", async (req, res) => {
     amount,
     Geldanlage,
   } = req.body;
-  const kp = {Datum: parse(date, "yyyy-MM-dd"), Betrag: amount, GeldanlageId: Geldanlage};
+  const kp = {Datum: parse(date, "yyyy-MM-dd", new Date()), Betrag: amount, GeldanlageId: Geldanlage};
   console.log("Sending "+JSON.stringify(kp))
   const code = await CreateKassenpruefung({Datum: format(kp.Datum, "dd.MM.yyyy"), Betrag: parseFloat(kp.Betrag), GeldanlageId: parseInt(kp.GeldanlageId)});
   if (code === 200) {
