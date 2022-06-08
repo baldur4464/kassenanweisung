@@ -11,7 +11,8 @@ kpRouter.get("/", async(req, res) => {
   let page = req.query.page ? req.query.page : 1;
   const limit = req.query.limit ? req.query.limit : 10
   const updated = req.query.updated ? req.query.updated : false
-  const removed = req.query.removed ? req.query.removed : false
+  const deleted = req.query.deleted ? req.query.deleted : false
+  const delete_error = req.query.delete_error ? req.query.delete_error : false
   const created = req.query.created ? req.query.created : false
   const hhj_arr = await getHaushaltsjahre()
   let firstpage = page == 1
@@ -21,7 +22,7 @@ kpRouter.get("/", async(req, res) => {
     return
   }
   let lastpage = page == Math.ceil(kps.length / limit);
-  res.render("kaprueanzeigen", { rows: kps, page: page, firstpage: firstpage, lastpage: lastpage, updated: updated, removed: removed, created: created, Header_HHJ: hhj_arr,});
+  res.render("kaprueanzeigen", { rows: kps, page: page, firstpage: firstpage, lastpage: lastpage, updated: updated, deleted: deleted, created: created, Header_HHJ: hhj_arr,});
 });
 
 kpRouter.get("/edit/:id", async(req, res) => {
