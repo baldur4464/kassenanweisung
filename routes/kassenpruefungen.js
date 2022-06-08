@@ -75,10 +75,15 @@ kpRouter.post("/create", async (req, res) => {
   }
 })
 
-kpRouter.get("/delete", async (req, res) => {
+kpRouter.get("/delete/:id", async (req, res) => {
+  const id1 = req.params["id"]
   const prevPage = req.query.prevPage ? req.query.prevPage : 1;
-  const code = await DeleteKassenpruefung(1);
-  res.render("404");
+  const code = await DeleteKassenpruefung(parseInt(id1));
+  if (code === 200) {
+    res.redirect('/kassenpruefungen?deleted=true')
+  } else {
+    res.redirect('/kassenpruefungen?deleted=false')
+  }
 })
 
 export { kpRouter };
