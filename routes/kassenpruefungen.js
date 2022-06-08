@@ -66,9 +66,12 @@ kpRouter.post("/create", async (req, res) => {
   } = req.body;
   const kp = {Datum: date, Betrag: amount, GeldanlageId: Geldanlage};
   console.log("Sending "+JSON.stringify(kp))
-  const code = await CreateKassenpruefung({...kp, GeldanlageId: parseInt(kp.GeldanlageId)});
+  const code = await CreateKassenpruefung({Datum: kp.Datum, Betrag: parseFloat(kp.Betrag), GeldanlageId: parseInt(kp.GeldanlageId)});
   if (code === 200) {
     res.redirect('/kassenpruefungen?created=true')
+  } else {
+    const geldanlagen = await getGeldanlagenForInhaber("Fachschaft ET");
+    res.render("kaprue", {Datum: date, Betrag: amount, Geldanlage: Geldanlage, Geldanlagen: geldanlagen.map((e) => {return {Id: e.Id, Name: e.Name}}), error: true,})
   }
 })
 
