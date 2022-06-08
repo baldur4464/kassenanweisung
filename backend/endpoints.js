@@ -180,7 +180,7 @@ async function sendPostOrPutJSON(path, jsonObject, method) {
         'Content-Type': "application/json",
         'Accept': "application/json",
       },
-      body: jsonObject,
+      body: JSON.stringify(jsonObject),
       signal: controller.signal,
     });
     clearTimeout(id);
