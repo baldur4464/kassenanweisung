@@ -1,9 +1,9 @@
 import fetch from "node-fetch"
-import {Blob} from "buffer"
 
+const TIMEOUT_VALUE = 3000;
 
 export async function GetKassenpruefungen() {
-  let path = "/kassenpruefungen/";
+  let path = "/kassenpruefungen/?direction=DESC";
   let obj = await sendGetRequestJSON(path)
   if (obj === undefined) {
     return obj
@@ -21,24 +21,22 @@ export async function GetKassenpruefungen() {
   return returnObj
 }
 
+/**
+ * 
+ * @param {number} id The numerical Id of the kassenpruefung
+ * @returns {Promise<{Id: number, Datum: string, Betrag: number, GeldanlageId: number, Geldanlagename: string,}>}
+ */
 export async function GetKassenpruefung(id) {
   let path = "/kassenpruefungen/" + id;
   let obj = await sendGetRequestJSON(path)
-  if (obj === undefined) {
-    return obj;
-  }
-  return {
-    Id: obj.Id,
-    Datum: obj.Datum,
-    Betrag: obj.Betrag,
-  }
+  return obj
 }
 
 /**
  * GetKassenanweisungPDF requests a PDF File with a filled out form for the ID from the backend and sends the file to the user.
  * 
  * @param {number} id 
- * @returns {globalThis.Blob} A PDF Form containing the information or undefined if nothing was sent
+ * @returns {Promise<globalThis.Blob>} A PDF Form containing the information or undefined if nothing was sent
  */
 export async function GetKassenanweisungPDF(id) {
   let path = "/kassenanweisungen/"+id;
@@ -110,23 +108,53 @@ export async function GetJahresabschlussJSON(anlageId, hhj) {
   return await sendGetRequestJSON(path)
 }
 
+/**
+ * 
+ * @param {{Id: number, Datum: string, Betrag: number, GeldanlageId: number, Geldanlagename: string,}} kp 
+ * @returns {Promise<number>} The status Code resulting from the request
+ */
 export async function UpdateKassenpruefung(kp) {
-  let res = await sendPostOrPutJSON("/kassenpruefungen/" + kp.Id, kp, "PUT");
+  const {Id, kp_no_Id} = kp
+  console.log("Does it work? \n"+JSON.stringify(kp)+"\n vs \n"+ JSON.stringify(kp_no_Id))
+  let res = await sendPostOrPutJSON("/kassenpruefungen/" + Id, kp, "POST");
   return res
+}
+
+/**
+ * 
+ * @param {{Datum: string, Betrag: number, GeldanlageId: number, Geldanlagename: string,}} kp 
+ * @returns {Promise<number>} The status Code resulting from the request
+ */
+export async function CreateKassenpruefung(kp) {
+  let res = await sendPostOrPutJSON("/kassenpruefungen/", kp, "POST");
+  return res
+}
+
+/**
+ * 
+ * @param {number} kp The Id of the Kassenpruefung
+ * @returns {Promise<number>} an http status Code describing the result
+ */
+export async function DeleteKassenpruefung(kp) {
+  return await sendDelete("/kassenpruefungen/"+kp)
 }
 
 async function sendGetRequestJSON(path) {
   let url = "http://" + process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), TIMEOUT_VALUE);
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: {
         'Accept': "application/json"
       },
+      signal: controller.signal,
     });
     if (response.status !== 200) {
       console.log("Error: Status was not 200 but " + response.status);
     }
+    clearTimeout(id);
     return await response.json();
   } catch (e) {
     console.log(e);
@@ -136,6 +164,8 @@ async function sendGetRequestJSON(path) {
 
 async function sendPostOrPutJSON(path, jsonObject, method) {
   let url = "http://" + process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), TIMEOUT_VALUE);
   try {
     const response = await fetch(url, {
       method: method,
@@ -143,8 +173,10 @@ async function sendPostOrPutJSON(path, jsonObject, method) {
         'Content-Type': "application/json",
         'Accept': "application/json",
       },
-      body: jsonObject,
+      body: JSON.stringify(jsonObject),
+      signal: controller.signal,
     });
+    clearTimeout(id);
     return response.status;
   } catch (e) {
     console.log(e);
@@ -190,4 +222,21 @@ async function sendGetRequestZIP(path) {
     console.log(e);
   }
   return undefined;
+}
+
+async function sendDelete(path) {
+  let url = "http://"+process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT + path;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), TIMEOUT_VALUE);
+  try {
+    const response = await fetch(url, {
+      method: "DELETE",
+      signal: controller.signal,
+    });
+    clearTimeout(id);
+    return response.status;
+  } catch (e) {
+    console.log(e);
+  }
+  return 400;
 }

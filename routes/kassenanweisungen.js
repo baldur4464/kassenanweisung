@@ -2,7 +2,7 @@ import express from "express";
 import { GetKassenanweisungPDF as GetKassenanweisungPDF } from "../backend/endpoints.js";
 import * as model from "../models/kassenanweisung.model.js";
 import * as pdfservice from "../services/KassenanweisungPDF.js";
-import {Blob} from "buffer"
+import {Buffer} from "buffer"
 
 const router = express.Router();
 

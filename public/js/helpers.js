@@ -41,5 +41,8 @@ export default {
    */
   createJahresabschlussPath: function(text) {
     return "/jahresabschluss/"+encodeURIComponent(text);
-  }
+  },
+  stringEquals: function(value1, value2) {
+    return value1 === value2;
+  },
 };
